@@ -1,0 +1,31 @@
+﻿<Page
+    x:Class="IekOpcSamplerApp.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:IekOpcSamplerApp"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <Border BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Left" Height="967" Margin="1509,103,0,0" VerticalAlignment="Top" Width="398"/>
+
+        <Border BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Left" Height="88" Margin="1509,10,0,0" VerticalAlignment="Top" Width="398" />
+        <Image HorizontalAlignment="Left" Height="165" VerticalAlignment="Top" Width="246" Source="Assets/ieklogo.png"/>
+        <TextBlock HorizontalAlignment="Left" Height="62" Margin="1541,140,0,0" TextWrapping="Wrap" Text="Muestreo" VerticalAlignment="Top" Width="276" FontSize="50"/>
+        <ComboBox HorizontalAlignment="Left" Height="81" Margin="1528,207,0,0" VerticalAlignment="Top" Width="360" ItemsSource="{x:Bind sampleSize}" FontSize="32" SelectionChanged="ComboBox_SelectionChanged"/>
+        <TextBlock HorizontalAlignment="Left" Height="62" Margin="1541,314,0,0" TextWrapping="Wrap" Text="Actual" VerticalAlignment="Top" Width="149" FontSize="50"/>
+        <TextBlock x:Name="TextV1" HorizontalAlignment="Left" Height="62" Margin="1718,371,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="125" FontSize="32" RenderTransformOrigin="0.558,0.427"/>
+        <TextBlock HorizontalAlignment="Left" Height="62" Margin="1541,438,0,0" TextWrapping="Wrap" Text="Anterior" VerticalAlignment="Top" Width="276" FontSize="50"/>
+        <TextBlock x:Name="TextV0" HorizontalAlignment="Left" Height="62" Margin="1718,500,0,0" TextWrapping="Wrap" Text="0.00" VerticalAlignment="Top" Width="125" FontSize="32"/>
+        <TextBlock HorizontalAlignment="Left" Height="18" Margin="1528,19,0,0" TextWrapping="Wrap" Text="OPC Status:" VerticalAlignment="Top" Width="64" FontSize="10"/>
+        <TextBlock HorizontalAlignment="Left" Height="18" Margin="1529,37,0,0" TextWrapping="Wrap" Text="Error Count:" VerticalAlignment="Top" Width="64" FontSize="10"/>
+        <TextBlock x:Name="OpcStatus" HorizontalAlignment="Left" Height="21.482" Margin="1587.01,18.759,0,0" TextWrapping="Wrap" Text="GOOD" VerticalAlignment="Top" Width="144.98" FontSize="10" FontWeight="Bold" RenderTransformOrigin="0.5,0.5" UseLayoutRounding="False" d:LayoutRounding="Auto">
+            <TextBlock.RenderTransform>
+                <CompositeTransform Rotation="-0.341"/>
+            </TextBlock.RenderTransform>
+        </TextBlock>
+        <TextBlock x:Name="ErrCount" HorizontalAlignment="Left" Height="18" Margin="1589,37,0,0" TextWrapping="Wrap" Text="0" VerticalAlignment="Top" Width="64" FontSize="10" />
+
+    </Grid>
+</Page>
