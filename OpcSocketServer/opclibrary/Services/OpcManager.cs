@@ -38,7 +38,6 @@ namespace opclibrary.Services
             {
                 _OPCServer = new OPCAutomation.OPCServer();
                 _OPCServer.Connect("KEPware.KEPServerEx.V6", "");
-
             }
             catch (Exception ex)
             {

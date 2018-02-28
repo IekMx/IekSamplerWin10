@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
@@ -14,6 +15,7 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
+using WinRTXamlToolkit.Controls.DataVisualization;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 
@@ -24,7 +26,7 @@ namespace IekOpcSamplerApp
     /// </summary>
     public sealed partial class MainPage : Page
     {
-        #region "View Vars"
+        #region "View"
         ObservableCollection<string> sampleSize = new ObservableCollection<string>();
         double ThisStep { get; set; }
         double LastStep { get; set; }
@@ -95,11 +97,44 @@ namespace IekOpcSamplerApp
             }
         }
 
-        private void _OpcClient_TagValueChanged(object sender, Models.Tag tag)
+        private async void _OpcClient_TagValueChanged(object sender, Models.Tag tag)
         {
-            TextV1.Text = tag.Value;
+            await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal,
+                () =>
+                {
+                    TextV1.Text = tag.Value;
+                });
+        }
+
+        private async void Button1_Click(object sender, RoutedEventArgs e)
+        {
+            await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal,
+                async () =>
+                {
+                    try
+                    {
+                        await _OpcClient.SendAsync(
+                            JsonConvert.SerializeObject(new
+                            {
+                                handle = 1,
+                                name = "B_BERTHA",
+                                value = 1
+                            }));
+                        await Task.Delay(500);
+                        await _OpcClient.SendAsync(
+                            JsonConvert.SerializeObject(new
+                            {
+                                handle = 1,
+                                name = "B_BERTHA",
+                                value = 0
+                            }));
+                    }
+                    catch (Exception ex)
+                    {
+                        throw;
+                    }
+                });
         }
         #endregion
-
     }
 }

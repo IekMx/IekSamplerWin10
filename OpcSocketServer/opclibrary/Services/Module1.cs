@@ -25,12 +25,13 @@ namespace opclibrary.Services
             //List<dynamic> dt = DbManager.GetDataTable("SELECT handle,name,formid,corr FROM tags ORDER BY handle");
             //foreach (var i in dt)
             //{
-            //    TagList.Add(new OpcTag
-            //    {
-            //        Handle = int.Parse(i.ItemArray[0].ToString()),
-            //        Name = i.ItemArray[1].ToString(),
-            //        Corr = int.Parse(i.ItemArray[3].ToString())
-            //    });
+            TagList.Add(new OpcTag());
+            TagList.Add(new OpcTag
+            {
+                Handle = 1,
+                Name = "B_BERTHA",
+                Corr = 0
+            });
             //}
             //TagNameArray = TagList.Select(x => x.Name).ToArray();
             //HandleArray = TagList.Select(x => x.Handle).ToArray();

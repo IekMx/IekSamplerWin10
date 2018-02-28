@@ -8,7 +8,9 @@
     mc:Ignorable="d">
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-        <Border BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Left" Height="967" Margin="1509,103,0,0" VerticalAlignment="Top" Width="398"/>
+        <Border BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Left" Height="967" Margin="1509,103,0,0" VerticalAlignment="Top" Width="398">
+            <Button x:Name="Button1" Click="Button1_Click" Content="Button" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+        </Border>
 
         <Border BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Left" Height="88" Margin="1509,10,0,0" VerticalAlignment="Top" Width="398" />
         <Image HorizontalAlignment="Left" Height="165" VerticalAlignment="Top" Width="246" Source="Assets/ieklogo.png"/>

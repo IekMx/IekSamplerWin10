@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.WebSockets;
+﻿using OpcSocket.Contracts;
+using System;
 using System.ServiceModel;
-using System.ServiceModel.Activation;
 using System.ServiceModel.Channels;
 using System.ServiceModel.Description;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace OpcSocket
 {
@@ -47,20 +42,5 @@ namespace OpcSocket
                 host.Close();
             }
         }
-    }
-
-    [ServiceContract(CallbackContract = typeof(IProgressContext))]
-    public interface IWebSocketsServer
-    {
-        [OperationContract(Action = "*", IsOneWay = true)]
-        void SendMessageToServer(Message msg);
-    }
-
-    [ServiceContract]
-    interface IProgressContext
-    {
-        [OperationContract(IsOneWay = true, Action = "*")]
-        void ReportProgress(Message msg);
-    }
-    
+    }   
 }
