@@ -5,29 +5,101 @@
     xmlns:local="using:IekOpcSamplerApp"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:Charting="using:WinRTXamlToolkit.Controls.DataVisualization.Charting"
     mc:Ignorable="d">
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <Border BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Left" Height="967" Margin="1509,103,0,0" VerticalAlignment="Top" Width="398">
-            <Button x:Name="Button1" Click="Button1_Click" Content="Button" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+            <RelativePanel>
+
+                <TextBlock HorizontalAlignment="Left" Height="62" Margin="10,19,0,0" TextWrapping="Wrap" Text="Muestreo" VerticalAlignment="Top" Width="216" FontSize="50"/>
+                <ComboBox HorizontalAlignment="Left" Height="50" Margin="230,29,0,0" VerticalAlignment="Top" Width="156" ItemsSource="{x:Bind sampleSize}" FontSize="20" SelectionChanged="ComboBox_SelectionChanged"/>
+                <TextBlock HorizontalAlignment="Left" Height="62" Margin="10,112,0,0" TextWrapping="Wrap" Text="Actual" VerticalAlignment="Top" Width="149" FontSize="50"/>
+                <TextBlock x:Name="TextV1" HorizontalAlignment="Left" Height="62" Margin="210,131,-40,0" TextWrapping="Wrap" Text="0.00" VerticalAlignment="Top" Width="125" FontSize="32" RenderTransformOrigin="0.558,0.427"/>
+                <TextBlock HorizontalAlignment="Left" Height="62" Margin="10,197,0,0" TextWrapping="Wrap" Text="Anterior" VerticalAlignment="Top" Width="276" FontSize="50"/>
+                <TextBlock x:Name="TextV0" HorizontalAlignment="Left" Height="62" Margin="210,217,0,0" TextWrapping="Wrap" Text="0.00" VerticalAlignment="Top" Width="125" FontSize="32"/>
+                <Border BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Left" Height="1" Margin="15,287,-384,-277" VerticalAlignment="Top" Width="371"/>
+                <Border BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Left" Height="1" Margin="15,106,-384,-96" VerticalAlignment="Top" Width="371"/>
+                <TextBlock HorizontalAlignment="Left" Height="62" Margin="15,293,-237,-181" TextWrapping="Wrap" Text="Límites" VerticalAlignment="Top" Width="371" FontSize="50"/>
+                <TextBlock HorizontalAlignment="Left" Height="62" Margin="59,360,0,-163" TextWrapping="Wrap" Text="Superior" VerticalAlignment="Top" Width="134" FontSize="30"/>
+                <TextBlock HorizontalAlignment="Left" Height="62" Margin="59,422,0,-225" TextWrapping="Wrap" Text="Inferior" VerticalAlignment="Top" Width="134" FontSize="30"/>
+                <StackPanel Orientation="Horizontal" Margin="210,360,0,-163">
+                    <Button x:Name="limSupUp" x:FieldModifier="private" Margin="5,5,0,5" Content="˄" Width="30" Click="limSupUp_Click" />
+                    <TextBox x:Name="limSupNum" x:FieldModifier="private" Margin="5,5,0,5" Width="66" Text="0" TextChanged="limSupNum_TextChanged" />
+                    <Button x:Name="limSupDown" x:FieldModifier="private" Margin="5,5,0,5"  Content="˅" Width="30" Click="limSupDown_Click" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Margin="210,420,0,-163">
+                    <Button x:Name="limInfUp" x:FieldModifier="private" Margin="5,5,0,5" Content="˄" Width="30" Click="limInfUp_Click" />
+                    <TextBox x:Name="limInfNum" x:FieldModifier="private" Margin="5,5,0,5" Width="66" Text="0" TextChanged="limInfNum_TextChanged" />
+                    <Button x:Name="limInfDown" x:FieldModifier="private" Margin="5,5,0,5"  Content="˅" Width="30" Click="limInfDown_Click" />
+                </StackPanel>
+            </RelativePanel>
         </Border>
 
-        <Border BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Left" Height="88" Margin="1509,10,0,0" VerticalAlignment="Top" Width="398" />
+        <Border BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Left" Height="88" Margin="1509,10,0,0" VerticalAlignment="Top" Width="398">
+            <RelativePanel>
+                <Button Content="Imprimir" HorizontalAlignment="Left" Height="32" VerticalAlignment="Top" Width="84" Margin="302,5,-321,-10"/>
+                <TextBlock HorizontalAlignment="Left" Height="20" TextWrapping="Wrap" Text="Opc Status:" VerticalAlignment="Top" Width="80" Margin="10,6,-18,-6" FontWeight="Bold"/>
+                <TextBlock x:Name="OpcStatus"  HorizontalAlignment="Left" Height="20" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="62" Margin="100,4,-72,-7"/>
+                <TextBlock HorizontalAlignment="Left" Height="20" TextWrapping="Wrap" Text="Error Count:" VerticalAlignment="Top" Width="95" Margin="10,29,-33,-29" FontWeight="Bold"/>
+                <TextBlock x:Name="ErrCount" HorizontalAlignment="Left" Height="20" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="62" Margin="100,29,-72,-29"/>
+                <Button Content="Reset" HorizontalAlignment="Left" Height="32" VerticalAlignment="Top" Width="84" Margin="302,45,-321,-10"/>
+
+            </RelativePanel>
+        </Border>
         <Image HorizontalAlignment="Left" Height="165" VerticalAlignment="Top" Width="246" Source="Assets/ieklogo.png"/>
-        <TextBlock HorizontalAlignment="Left" Height="62" Margin="1541,140,0,0" TextWrapping="Wrap" Text="Muestreo" VerticalAlignment="Top" Width="276" FontSize="50"/>
-        <ComboBox HorizontalAlignment="Left" Height="81" Margin="1528,207,0,0" VerticalAlignment="Top" Width="360" ItemsSource="{x:Bind sampleSize}" FontSize="32" SelectionChanged="ComboBox_SelectionChanged"/>
-        <TextBlock HorizontalAlignment="Left" Height="62" Margin="1541,314,0,0" TextWrapping="Wrap" Text="Actual" VerticalAlignment="Top" Width="149" FontSize="50"/>
-        <TextBlock x:Name="TextV1" HorizontalAlignment="Left" Height="62" Margin="1718,371,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="125" FontSize="32" RenderTransformOrigin="0.558,0.427"/>
-        <TextBlock HorizontalAlignment="Left" Height="62" Margin="1541,438,0,0" TextWrapping="Wrap" Text="Anterior" VerticalAlignment="Top" Width="276" FontSize="50"/>
-        <TextBlock x:Name="TextV0" HorizontalAlignment="Left" Height="62" Margin="1718,500,0,0" TextWrapping="Wrap" Text="0.00" VerticalAlignment="Top" Width="125" FontSize="32"/>
-        <TextBlock HorizontalAlignment="Left" Height="18" Margin="1528,19,0,0" TextWrapping="Wrap" Text="OPC Status:" VerticalAlignment="Top" Width="64" FontSize="10"/>
-        <TextBlock HorizontalAlignment="Left" Height="18" Margin="1529,37,0,0" TextWrapping="Wrap" Text="Error Count:" VerticalAlignment="Top" Width="64" FontSize="10"/>
-        <TextBlock x:Name="OpcStatus" HorizontalAlignment="Left" Height="21.482" Margin="1587.01,18.759,0,0" TextWrapping="Wrap" Text="GOOD" VerticalAlignment="Top" Width="144.98" FontSize="10" FontWeight="Bold" RenderTransformOrigin="0.5,0.5" UseLayoutRounding="False" d:LayoutRounding="Auto">
-            <TextBlock.RenderTransform>
-                <CompositeTransform Rotation="-0.341"/>
-            </TextBlock.RenderTransform>
-        </TextBlock>
-        <TextBlock x:Name="ErrCount" HorizontalAlignment="Left" Height="18" Margin="1589,37,0,0" TextWrapping="Wrap" Text="0" VerticalAlignment="Top" Width="64" FontSize="10" />
+        <Border BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Left" Height="689" Margin="0,103,0,0" VerticalAlignment="Top" Width="1504">
+            <Grid x:Name="Grid1">
+                <Charting:Chart x:Name="LineChart" HorizontalAlignment="Left" VerticalAlignment="Top" Width="1444" Height="650" Margin="34,17,0,0" >
+                    <Charting:LineSeries Title="" x:Name="lineSeries" ItemsSource="{Binding}" IndependentValueBinding="{Binding Path=Key}" DependentValueBinding="{Binding Path=Value}" IsSelectionEnabled="True" Margin="0,-29,-22,-16">
+                        <Charting:LineSeries.DataPointStyle>
+                            <Style TargetType="Charting:LineDataPoint">
+                                <Setter Property="BorderThickness" Value="0" />
+                                <Setter Property="Background" Value="Red" />
+                                <Setter Property="IsTabStop" Value="False" />
+                                <Setter Property="Width" Value="0" />
+                                <Setter Property="Height" Value="0" />
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="Charting:LineDataPoint">
+                                            <Grid x:Name="Root" Opacity="0" />
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                        </Charting:LineSeries.DataPointStyle>
+                        <Charting:LineSeries.DependentRangeAxis>
+                            <Charting:LinearAxis Orientation="Y" ShowGridLines="False" />
+                        </Charting:LineSeries.DependentRangeAxis>
+                    </Charting:LineSeries>
+                </Charting:Chart>
+            </Grid>
+        </Border>
+        <Border BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Left" Height="273" Margin="0,797,0,0" VerticalAlignment="Top" Width="1504">
+            <Charting:Chart x:Name="LineChartH" HorizontalAlignment="Left" VerticalAlignment="Top" Width="1498" Height="270" Margin="-1,-7,0,0" >
+                <Charting:LineSeries Title="" ItemsSource="{Binding}" IndependentValueBinding="{Binding Path=Key}" DependentValueBinding="{Binding Path=Value}" IsSelectionEnabled="True" Margin="0,-29,-22,-16">
+                    <Charting:LineSeries.DataPointStyle>
+                        <Style TargetType="Charting:LineDataPoint">
+                            <Setter Property="BorderThickness" Value="0" />
+                            <Setter Property="Background" Value="DarkGray" />
+                            <Setter Property="IsTabStop" Value="False" />
+                            <Setter Property="Width" Value="0" />
+                            <Setter Property="Height" Value="0" />
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="Charting:LineDataPoint">
+                                        <Grid x:Name="Root" Opacity="0" />
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </Charting:LineSeries.DataPointStyle>
+                    <Charting:LineSeries.DependentRangeAxis>
+                        <Charting:LinearAxis Orientation="Y" ShowGridLines="False" />
+                    </Charting:LineSeries.DependentRangeAxis>
+                </Charting:LineSeries>
+            </Charting:Chart>
+        </Border>
 
     </Grid>
 </Page>
