@@ -1,10 +1,5 @@
-﻿using opclibrary.Services;
-using OPCAutomation;
+﻿using OPCAutomation;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace opclibrary.Services
 {
@@ -37,33 +32,19 @@ namespace opclibrary.Services
             try
             {
                 _OPCServer = new OPCAutomation.OPCServer();
-                _OPCServer.Connect("KEPware.KEPServerEx.V6", "");
-            }
-            catch (Exception ex)
-            {
-                Instance.StatusMessageChanged?.Invoke(ex, "OpcManager desconectado");
-                _OPCServer = null;
-            }
-            try
-            {
+                _OPCServer.Connect("GaugeToolsXL OPC Server", "");
                 _OPCServer.OPCGroups.DefaultGroupIsActive = true;
                 _OPCServer.OPCGroups.DefaultGroupDeadband = 0;
-                Module1._OPCGroup = _OPCServer.OPCGroups.Add("Channel1.Device1");
+                Module1._OPCGroup = _OPCServer.OPCGroups.Add("Base group");
                 Module1._OPCGroup.UpdateRate = 250;
                 Module1._OPCGroup.IsSubscribed = true;
 
                 Module1._OPCGroup.DataChange += OPCGroup_DataChanged;
-            }
-            catch (Exception ex)
-            {
-                _OPCServer = null;
-                Instance.StatusMessageChanged?.Invoke(ex, "OpcManager desconectado");
-            }
-            try
-            {
                 Module1._OPCGroup.OPCItems.DefaultIsActive = true;
                 Module1._OPCGroup.OPCItems.AddItems(Module1.TagCount, Module1.TagNameArray, Module1.HandleArray, out Module1.ItemServerHandles, out Module1.ItemServerErrors);
+
                 bool itemgood = false;
+
                 for (int i = 1; i <= Module1.TagCount; i++)
                 {
                     int ab = (Int32)Module1.ItemServerErrors.GetValue(i);
@@ -75,10 +56,10 @@ namespace opclibrary.Services
                 if (!itemgood)
                 {
                 }
-
             }
             catch (Exception ex)
             {
+                Instance.StatusMessageChanged?.Invoke(ex, "OpcManager desconectado");
                 _OPCServer = null;
             }
         }
@@ -426,7 +407,10 @@ namespace opclibrary.Services
                 {
                     e.ItemValue = ItemValues.GetValue(i) != null ? (int)ItemValues.GetValue(i) : -1;
                 }
-                //Module1.TagList[e.ItemHandle].Value = e.ItemValue;
+                else if (typeof(Single) == ItemValues.GetValue(i).GetType())
+                {
+                    e.ItemValue = ItemValues.GetValue(i) != null ? (Single)ItemValues.GetValue(i) : -1;
+                }
 
                 DataChanged?.Invoke(this, e);
             }

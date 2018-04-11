@@ -13,7 +13,7 @@ namespace IekOpcSamplerApp.Services
     public delegate void OpcSocketClientStatusMonitor(object sender, Enums.OpcSocketClientStatus status);
     public delegate void OpcSocketClientTagValueMonitor(object sender, Tag tag);
 
-    class OpcSocketClient
+    internal class OpcSocketServer
     {
         public event OpcSocketClientStatusMonitor ConnectionStatusChanged;
         public event OpcSocketClientTagValueMonitor TagValueChanged;

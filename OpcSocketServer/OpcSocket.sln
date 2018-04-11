@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpcSocket", "OpcSocket\OpcS
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "opclibrary", "opclibrary\opclibrary.csproj", "{A12B96BE-263C-42A5-8ECB-13662E8A093E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "gaugetoolsbridge", "gaugetoolsbridge\gaugetoolsbridge.csproj", "{2278EA8F-AC2A-4543-A285-D58A582D7CE9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{A12B96BE-263C-42A5-8ECB-13662E8A093E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A12B96BE-263C-42A5-8ECB-13662E8A093E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A12B96BE-263C-42A5-8ECB-13662E8A093E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2278EA8F-AC2A-4543-A285-D58A582D7CE9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2278EA8F-AC2A-4543-A285-D58A582D7CE9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2278EA8F-AC2A-4543-A285-D58A582D7CE9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2278EA8F-AC2A-4543-A285-D58A582D7CE9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

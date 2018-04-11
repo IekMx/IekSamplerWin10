@@ -10,15 +10,15 @@ namespace opclibrary.Services
 {
     public static class Module1
     {
-        public static string OPCServerName = "KEPware.KEPServerEx.V5";
+        public static string OPCServerName = "Gauge ToolsXL OPC Server";
         public static List<OpcTag> TagList = new List<OpcTag>();
-        public static int TagCount = 2;
+        public static int TagCount = 1;
         public static Array ItemServerHandles;
         public static OPCGroup _OPCGroup;
         public static Array ItemServerErrors;
-        public static Array TagNameArray = new string[3] { "", "Channel1.Device1.B_BERTHA", "Channel1.Device1.CTU_ACC" };
-        public static Array HandleArray = new int[] { 0, 1, 2 };
-        public static int[] OPCItemIsArray = new int[3];
+        public static Array TagNameArray = new string[2] { "", "Output"};
+        public static Array HandleArray = new int[] { 0, 1};
+        public static int[] OPCItemIsArray = new int[2];
 
         static Module1()
         {
@@ -29,7 +29,7 @@ namespace opclibrary.Services
             TagList.Add(new OpcTag
             {
                 Handle = 1,
-                Name = "B_BERTHA",
+                Name = "Output",
                 Corr = 0
             });
             //}

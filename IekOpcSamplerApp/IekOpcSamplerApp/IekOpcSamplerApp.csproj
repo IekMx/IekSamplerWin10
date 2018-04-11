@@ -102,8 +102,9 @@
     <Compile Include="Models\OpcMessage.cs" />
     <Compile Include="Models\Tag.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\DatabaseService.cs" />
     <Compile Include="Services\OpcProcessor.cs" />
-    <Compile Include="Services\OpcSocketClient.cs" />
+    <Compile Include="Services\OpcSocketServer.cs" />
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest">

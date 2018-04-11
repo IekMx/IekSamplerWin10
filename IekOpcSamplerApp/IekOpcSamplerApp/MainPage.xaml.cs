@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
 using Windows.Foundation;
@@ -33,57 +34,30 @@ namespace IekOpcSamplerApp
         ObservableCollection<string> sampleSize = new ObservableCollection<string>();
         double ThisStep { get; set; }
         double LastStep { get; set; }
-        ObservableCollection<KeyValuePair<int, double>> kvList = new ObservableCollection<KeyValuePair<int, double>>();
-        ObservableCollection<KeyValuePair<int, double>> kvListH = new ObservableCollection<KeyValuePair<int, double>>();
+        int LimSup = 0;
+        int LimInf = 0;
+        ObservableCollection<KeyValuePair<int, double>> MainLineCollection = new ObservableCollection<KeyValuePair<int, double>>();
+        ObservableCollection<KeyValuePair<int, double>> UpperLimitCollection = new ObservableCollection<KeyValuePair<int, double>>();
+        ObservableCollection<KeyValuePair<int, double>> LowerLimitCollection = new ObservableCollection<KeyValuePair<int, double>>();
+        ObservableCollection<KeyValuePair<int, double>> MainLineCollectionH = new ObservableCollection<KeyValuePair<int, double>>();
         DispatcherTimer timer = new DispatcherTimer();
         int x = 0;
         Line line;
         #endregion
 
         #region "Services"
-        Services.OpcSocketClient _OpcClient = new Services.OpcSocketClient();
+        Services.OpcSocketServer _OpcClient = new Services.OpcSocketServer();
+        Services.DatabaseService _DBClient = new Services.DatabaseService();
         #endregion
 
         public MainPage()
         {
             this.InitializeComponent();
             this.DataContext = this;
-            LineChart.DataContext = kvList;
-            LineChartH.DataContext = kvListH;
-
-            timer.Interval = new TimeSpan(0, 0, 1);
-            timer.Tick += (object sender, object e) =>
-            {
-                if (kvList.Count == 100)
-                {
-                    kvListH.Add(kvList[0]);
-                    kvList.RemoveAt(0);
-                }
-                kvList.Add(new KeyValuePair<int, double>(x++, Math.Sin(x)));
-                if (Grid1.Children.Contains(line))
-                {
-                    Grid1.Children.Remove(line);
-                }
-
-                var axisy = LineChart.ActualAxes[1] as LinearAxis;
-                var linearaximaximum = Convert.ToDouble(axisy.ActualMaximum);
-                var linearaximinimum = Convert.ToDouble(axisy.ActualMinimum);
-                double perinterval = Convert.ToDouble(axisy.ActualHeight / (linearaximaximum - linearaximinimum));
-
-                var lineY = perinterval * (0.8 - linearaximinimum);
-
-                var ttv = lineSeries.TransformToVisual(Window.Current.Content);
-                Point screenCoords = ttv.TransformPoint(new Point(0, 0));
-
-                line = new Line();
-                line.X1 = screenCoords.X;
-                line.X2 = LineChart.ActualWidth;
-                line.Y1 = axisy.ActualHeight - lineY;
-                line.Y2 = axisy.ActualHeight - lineY;
-                line.Stroke = new SolidColorBrush(Colors.Gray);
-                line.StrokeThickness = 1;
-                Grid1.Children.Add(line);
-            };
+            MainLineSeries.DataContext = MainLineCollection;
+            UpperLimitSeries.DataContext = UpperLimitCollection;
+            LowerLimitSeries.DataContext = LowerLimitCollection;
+            LineChartH.DataContext = MainLineCollectionH;
 
             sampleSize.Add("8");
             sampleSize.Add("16");
@@ -145,69 +119,85 @@ namespace IekOpcSamplerApp
                 () =>
                 {
                     TextV1.Text = tag.Value;
+                    if (MainLineCollection.Count == 100)
+                    {
+                        MainLineCollectionH.Add(MainLineCollection[0]);
+                        MainLineCollection.RemoveAt(0);
+                        UpperLimitCollection.RemoveAt(0);
+                        LowerLimitCollection.RemoveAt(0);
+                    }
+                    MainLineCollection.Add(new KeyValuePair<int, double>(x, double.Parse(tag.Value)));
+                    UpperLimitCollection.Add(new KeyValuePair<int, double>(x, LimSup));
+                    LowerLimitCollection.Add(new KeyValuePair<int, double>(x, LimInf));
+                    x++;
                 });
         }
 
-        private void Button1_Click(object sender, RoutedEventArgs e)
+        private async void Button1_Click(object sender, RoutedEventArgs e)
         {
-            //await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal,
-            //    async () =>
-            //    {
-            //        try
-            //        {
-            //            await _OpcClient.SendAsync(
-            //                JsonConvert.SerializeObject(new
-            //                {
-            //                    handle = 1,
-            //                    name = "B_BERTHA",
-            //                    value = 1
-            //                }));
-            //            await Task.Delay(500);
-            //            await _OpcClient.SendAsync(
-            //                JsonConvert.SerializeObject(new
-            //                {
-            //                    handle = 1,
-            //                    name = "B_BERTHA",
-            //                    value = 0
-            //                }));
-            //        }
-            //        catch (Exception ex)
-            //        {
-            //            throw;
-            //        }
-            //    });
+            await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal,
+                async () =>
+                {
+                    try
+                    {
+                        await _OpcClient.SendAsync(
+                            JsonConvert.SerializeObject(new
+                            {
+                                handle = 1,
+                                name = "B_BERTHA",
+                                value = 1
+                            }));
+                        await Task.Delay(500);
+                        await _OpcClient.SendAsync(
+                            JsonConvert.SerializeObject(new
+                            {
+                                handle = 1,
+                                name = "B_BERTHA",
+                                value = 0
+                            }));
+                    }
+                    catch (Exception ex)
+                    {
+                        throw;
+                    }
+                });
 
         }
         #endregion
 
-        private void limSupUp_Click(object sender, RoutedEventArgs e)
+        private void limitButton_Click(object sender, RoutedEventArgs e)
         {
+            int.TryParse(limSupNum.Text, out LimSup);
+            int.TryParse(limInfNum.Text, out LimInf);
 
+            switch (sender.GetType().GetProperties().Where(x => x.Name == "Name").Select(x => x.GetValue(sender)).FirstOrDefault())
+            {
+                case "limSupUp":
+                    LimSup++;
+                    break;
+                case "limSupDown":
+                    LimSup--;
+                    break;
+                case "limInfUp":
+                    LimInf++;
+                    break;
+                case "limInfDown":
+                    LimInf--;
+                    break;
+                default:
+                    break;
+            }
+            limSupNum.Text = LimSup.ToString();
+            limInfNum.Text = LimInf.ToString();
+            for (var i = 0; i < UpperLimitCollection.Count; i++)
+            {
+                UpperLimitCollection[i] = new KeyValuePair<int, double>(UpperLimitCollection[i].Key, LimSup);
+            }
+            for (var i = 0; i < LowerLimitCollection.Count; i++)
+            {
+                LowerLimitCollection[i] = new KeyValuePair<int, double>(LowerLimitCollection[i].Key, LimInf);
+            }
         }
 
-        private void limSupNum_TextChanged(object sender, TextChangedEventArgs e)
-        {
-
-        }
-
-        private void limSupDown_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
-
-        private void limInfUp_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
-
-        private void limInfNum_TextChanged(object sender, TextChangedEventArgs e)
-        {
-
-        }
-
-        private void limInfDown_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
     }
 }
