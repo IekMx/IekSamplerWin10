@@ -7,6 +7,7 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
+using Windows.ApplicationModel;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.UI;
@@ -83,6 +84,7 @@ namespace IekOpcSamplerApp
             OpcStatus.Text = "CONNECTING";
             try
             {
+                await FullTrustProcessLauncher.LaunchFullTrustProcessForCurrentAppAsync();
                 await _OpcClient.ConnectAsync();
                 await _OpcClient.SendAsync("HOLA");
             }

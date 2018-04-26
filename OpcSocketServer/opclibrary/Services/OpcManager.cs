@@ -32,7 +32,7 @@ namespace opclibrary.Services
             try
             {
                 _OPCServer = new OPCAutomation.OPCServer();
-                _OPCServer.Connect("GaugeToolsXL OPC Server", "");
+                _OPCServer.Connect("Gauge ToolsXL OPC Server", "");
                 _OPCServer.OPCGroups.DefaultGroupIsActive = true;
                 _OPCServer.OPCGroups.DefaultGroupDeadband = 0;
                 Module1._OPCGroup = _OPCServer.OPCGroups.Add("Base group");
