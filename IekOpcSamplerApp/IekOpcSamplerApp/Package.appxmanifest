@@ -25,17 +25,10 @@
         <uap:SplashScreen Image="Assets\SplashScreen.png" />
       </uap:VisualElements>
       <Extensions>
-        <desktop:Extension Category="windows.fullTrustProcess" Executable="c:\opc\OpcSocket.exe">
-          <desktop:FullTrustProcess>
-            <desktop:ParameterGroup GroupId="SyncGroup" Parameters="/Sync"/>
-            <desktop:ParameterGroup GroupId="OtherGroup" Parameters="/Other"/>
-          </desktop:FullTrustProcess>
-        </desktop:Extension>
       </Extensions>
     </Application>
   </Applications>
   <Capabilities>
     <Capability Name="internetClient" />
-    <rescap:Capability Name="runFullTrust" />
   </Capabilities>
 </Package>

@@ -11,7 +11,7 @@ namespace OpcSocket
         static void Main(string[] args)
         {
 
-            Uri baseAddress = new Uri("http://localhost:8888/opc");
+            Uri baseAddress = new Uri("http://localhost:8889/opc");
 
             // Create the ServiceHost.
             using (ServiceHost host = new ServiceHost(typeof(WebSocketsServer), baseAddress))

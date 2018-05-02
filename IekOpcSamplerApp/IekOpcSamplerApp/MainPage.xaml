@@ -9,20 +9,22 @@
     mc:Ignorable="d">
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-        <Border BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Left" Height="920" Margin="1509,150,0,0" VerticalAlignment="Top" Width="398">
-            <RelativePanel Margin="0,9,0,0">
+        <Border BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Left" Height="88" Margin="250,57,0,0" VerticalAlignment="Top" Width="1254">
+            <RelativePanel Margin="1,-1,-1,1">
+                <TextBlock HorizontalAlignment="Left" Height="70" TextWrapping="Wrap" Text="Perfil del adhesivo" VerticalAlignment="Top" Width="457" Margin="366,10,-751,-60" FontWeight="Bold" FontSize="50"/>
 
-                <TextBlock HorizontalAlignment="Left" Height="62" Margin="10,19,0,0" TextWrapping="Wrap" Text="Muestreo" VerticalAlignment="Top" Width="216" FontSize="50"/>
-                <ComboBox HorizontalAlignment="Left" Height="50" Margin="230,29,0,0" VerticalAlignment="Top" Width="156" ItemsSource="{x:Bind sampleSize}" FontSize="20" SelectionChanged="ComboBox_SelectionChanged"/>
-                <TextBlock HorizontalAlignment="Left" Height="62" Margin="10,112,0,0" TextWrapping="Wrap" Text="Actual" VerticalAlignment="Top" Width="149" FontSize="50"/>
-                <TextBlock x:Name="TextV1" HorizontalAlignment="Left" Height="62" Margin="210,131,-40,0" TextWrapping="Wrap" Text="0.00" VerticalAlignment="Top" Width="125" FontSize="32" RenderTransformOrigin="0.558,0.427"/>
-                <TextBlock HorizontalAlignment="Left" Height="62" Margin="10,197,0,0" TextWrapping="Wrap" Text="Anterior" VerticalAlignment="Top" Width="276" FontSize="50"/>
-                <TextBlock x:Name="TextV0" HorizontalAlignment="Left" Height="62" Margin="210,217,0,0" TextWrapping="Wrap" Text="0.00" VerticalAlignment="Top" Width="125" FontSize="32"/>
-                <Border BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Left" Height="1" Margin="15,287,-384,-277" VerticalAlignment="Top" Width="371"/>
-                <Border BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Left" Height="1" Margin="15,106,-384,-96" VerticalAlignment="Top" Width="371"/>
-                <TextBlock HorizontalAlignment="Left" Height="62" Margin="15,293,-237,-181" TextWrapping="Wrap" Text="Límites" VerticalAlignment="Top" Width="371" FontSize="50"/>
-                <TextBlock HorizontalAlignment="Left" Height="62" Margin="59,360,0,-163" TextWrapping="Wrap" Text="Superior" VerticalAlignment="Top" Width="134" FontSize="30"/>
-                <TextBlock HorizontalAlignment="Left" Height="62" Margin="59,422,0,-225" TextWrapping="Wrap" Text="Inferior" VerticalAlignment="Top" Width="134" FontSize="30"/>
+            </RelativePanel>
+        </Border>
+        <Border BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Left" Height="920" Margin="1509,150,0,0" VerticalAlignment="Top" Width="398">
+            <RelativePanel Margin="1,-1,-1,9">
+                <TextBlock HorizontalAlignment="Left" Height="62" Margin="111,10,-101,0" TextWrapping="Wrap" Text="Actual" Width="149" FontSize="50"/>
+                <TextBlock x:Name="labelActual" HorizontalAlignment="Center" Height="62" Margin="87,82,-30,-10" TextWrapping="Wrap" Text="-00.000" Width="203" FontSize="40" FontFamily="Lucida Console"/>
+                <TextBlock HorizontalAlignment="Left" Height="62" Margin="87,144,-77,0" TextWrapping="Wrap" Text="Promedio" Width="195" FontSize="40"/>
+                <TextBlock x:Name="labelPromedio" HorizontalAlignment="Left" Height="62" Margin="111,206,-141,0" TextWrapping="Wrap" Text="-00.000" Width="171" FontSize="35" FontFamily="Lucida Console"/>
+                <Border BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Center" Height="1" Margin="15,287,-384,-277" Width="371"/>
+                <TextBlock HorizontalAlignment="Left" Height="27" TextWrapping="Wrap" Text="SKU" VerticalAlignment="Top" Width="125" Margin="15,323,-140,-330" FontWeight="Bold" FontSize="20"/>
+                <TextBlock HorizontalAlignment="Left" Height="27" TextWrapping="Wrap" Text="Descripción" VerticalAlignment="Top" Width="125" Margin="15,355,-140,-362" FontWeight="Bold" FontSize="20"/>
+                <Button Content="..." HorizontalAlignment="Left" Height="32" VerticalAlignment="Top" Width="65" Margin="321,293,-321,-293"/>
             </RelativePanel>
         </Border>
 
@@ -39,7 +41,33 @@
         <Border BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Left" Height="642" Margin="0,150,0,0" VerticalAlignment="Top" Width="1504">
             <Grid x:Name="Grid1" Margin="0,9,0,0">
                 <Charting:Chart x:Name="LineChart" HorizontalAlignment="Left" VerticalAlignment="Top" Width="1444" Height="650" Margin="34,-4,0,-15" >
-                    <Charting:LineSeries Title="" x:Name="MainLineSeries" ItemsSource="{Binding}" IndependentValueBinding="{Binding Path=Key}" DependentValueBinding="{Binding Path=Value}" IsSelectionEnabled="True" Margin="0, 0, 0, 0">
+                    <Charting:LineSeries Title="" x:Name="MainLineSeries" ItemsSource="{Binding}" IndependentValueBinding="{Binding Path=X}" DependentValueBinding="{Binding Path=Y}" IsSelectionEnabled="True" Margin="0, 0, 0, 0">
+                        <Charting:LineSeries.DataPointStyle>
+                            <Style TargetType="Charting:LineDataPoint">
+                                <Setter Property="BorderThickness" Value="10" />
+                                <Setter Property="Background" Value="Black" />
+                                <Setter Property="IsTabStop" Value="False" />
+                                <Setter Property="Width" Value="10" />
+                                <Setter Property="Height" Value="0" />
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="Charting:LineDataPoint">
+                                            <Grid x:Name="Root" Opacity="0" />
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                        </Charting:LineSeries.DataPointStyle>
+                        <Charting:LineSeries.PolylineStyle>
+                            <Style TargetType="Polyline">
+                                <Setter Property="StrokeThickness" Value="5" />
+                            </Style>
+                        </Charting:LineSeries.PolylineStyle>
+                        <Charting:LineSeries.DependentRangeAxis>
+                            <Charting:LinearAxis Orientation="Y" ShowGridLines="False" />
+                        </Charting:LineSeries.DependentRangeAxis>
+                    </Charting:LineSeries>
+                    <Charting:LineSeries Title="" x:Name="UpperBoundSeries" ItemsSource="{Binding}" IndependentValueBinding="{Binding Path=X}" DependentValueBinding="{Binding Path=Y}" IsSelectionEnabled="True" Margin="0, 0, 0, 0">
                         <Charting:LineSeries.DataPointStyle>
                             <Style TargetType="Charting:LineDataPoint">
                                 <Setter Property="BorderThickness" Value="0" />
@@ -56,15 +84,17 @@
                                 </Setter>
                             </Style>
                         </Charting:LineSeries.DataPointStyle>
-                        <Charting:LineSeries.DependentRangeAxis>
-                            <Charting:LinearAxis Orientation="Y" ShowGridLines="False" />
-                        </Charting:LineSeries.DependentRangeAxis>
+                        <Charting:LineSeries.PolylineStyle>
+                            <Style TargetType="Polyline">
+                                <Setter Property="StrokeThickness" Value="10" />
+                            </Style>
+                        </Charting:LineSeries.PolylineStyle>
                     </Charting:LineSeries>
-                    <Charting:LineSeries Title="" x:Name="UpperLimitSeries" ItemsSource="{Binding}" IndependentValueBinding="{Binding Path=Key}" DependentValueBinding="{Binding Path=Value}" IsSelectionEnabled="True" Margin="0, 0, 0, 0">
+                    <Charting:LineSeries Title="" x:Name="LowerBoundSeries" ItemsSource="{Binding}" IndependentValueBinding="{Binding Path=X}" DependentValueBinding="{Binding Path=Y}" IsSelectionEnabled="True" Margin="0, 0, 0, 0">
                         <Charting:LineSeries.DataPointStyle>
                             <Style TargetType="Charting:LineDataPoint">
                                 <Setter Property="BorderThickness" Value="0" />
-                                <Setter Property="Background" Value="Gray" />
+                                <Setter Property="Background" Value="Red" />
                                 <Setter Property="IsTabStop" Value="False" />
                                 <Setter Property="Width" Value="0" />
                                 <Setter Property="Height" Value="0" />
@@ -77,31 +107,18 @@
                                 </Setter>
                             </Style>
                         </Charting:LineSeries.DataPointStyle>
-                    </Charting:LineSeries>
-                    <Charting:LineSeries Title="" x:Name="LowerLimitSeries" ItemsSource="{Binding}" IndependentValueBinding="{Binding Path=Key}" DependentValueBinding="{Binding Path=Value}" IsSelectionEnabled="True" Margin="0, 0, 0, 0">
-                        <Charting:LineSeries.DataPointStyle>
-                            <Style TargetType="Charting:LineDataPoint">
-                                <Setter Property="BorderThickness" Value="0" />
-                                <Setter Property="Background" Value="Gray" />
-                                <Setter Property="IsTabStop" Value="False" />
-                                <Setter Property="Width" Value="0" />
-                                <Setter Property="Height" Value="0" />
-                                <Setter Property="Template">
-                                    <Setter.Value>
-                                        <ControlTemplate TargetType="Charting:LineDataPoint">
-                                            <Grid x:Name="Root" Opacity="0" />
-                                        </ControlTemplate>
-                                    </Setter.Value>
-                                </Setter>
+                        <Charting:LineSeries.PolylineStyle>
+                            <Style TargetType="Polyline">
+                                <Setter Property="StrokeThickness" Value="10" />
                             </Style>
-                        </Charting:LineSeries.DataPointStyle>
+                        </Charting:LineSeries.PolylineStyle>
                     </Charting:LineSeries>
                 </Charting:Chart>
             </Grid>
         </Border>
         <Border BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Left" Height="273" Margin="0,797,0,0" VerticalAlignment="Top" Width="1504">
             <Charting:Chart x:Name="LineChartH" HorizontalAlignment="Left" VerticalAlignment="Top" Width="1498" Height="270" Margin="-1,-7,0,0" >
-                <Charting:LineSeries Title="" ItemsSource="{Binding}" IndependentValueBinding="{Binding Path=Key}" DependentValueBinding="{Binding Path=Value}" IsSelectionEnabled="True" Margin="0,-29,-22,-16">
+                <Charting:LineSeries Title="" ItemsSource="{Binding}" IndependentValueBinding="{Binding Path=X}" DependentValueBinding="{Binding Path=Y}" IsSelectionEnabled="True" Margin="0,-29,-22,-16">
                     <Charting:LineSeries.DataPointStyle>
                         <Style TargetType="Charting:LineDataPoint">
                             <Setter Property="BorderThickness" Value="0" />
@@ -128,24 +145,22 @@
             <CommandBar.Content>
                 <RelativePanel>
                     <TextBlock HorizontalAlignment="Left" Height="35" Margin="10,10,0,0" TextWrapping="Wrap" Text="Muestreo" VerticalAlignment="Top" Width="120" FontSize="25"/>
-                    <ComboBox HorizontalAlignment="Left" Height="35" Margin="20,48,0,0" VerticalAlignment="Top" Width="100" ItemsSource="{x:Bind sampleSize}" FontSize="15" SelectionChanged="ComboBox_SelectionChanged"/>
-                    <TextBlock HorizontalAlignment="Left" Height="35" Margin="150,10,0,0" TextWrapping="Wrap" Text="Límites" VerticalAlignment="Top" Width="120" FontSize="25"/>
+                    <TextBlock x:Name="labelMuestreo" HorizontalAlignment="Left" Height="35" Margin="120,13,0,0" TextWrapping="Wrap" Text="[ ]" VerticalAlignment="Top" Width="120" FontSize="22"/>
+                    <TextBlock HorizontalAlignment="Left" Height="35" Margin="170,10,0,0" TextWrapping="Wrap" Text="Límites" VerticalAlignment="Top" Width="120" FontSize="25"/>
+                    <TextBlock x:Name="labelLimites" HorizontalAlignment="Left" Height="35" Margin="250,13,0,0" TextWrapping="Wrap" Text="[ ]" VerticalAlignment="Top" Width="120" FontSize="22"/>
                     <StackPanel Orientation="Horizontal" Margin="155,45,0,0">
-                        <Button x:Name="limSupUp" x:FieldModifier="private" Margin="5,5,0,5" Content="˄" Width="30" Click="limitButton_Click" />
-                        <TextBox x:Name="limSupNum" x:FieldModifier="private" Margin="5,5,0,5" Width="66" Text="0" TextChanged="limitButton_Click" />
-                        <Button x:Name="limSupDown" x:FieldModifier="private" Margin="5,5,0,5"  Content="˅" Width="30" Click="limitButton_Click" />
+                        <TextBox x:Name="limSupNum" x:FieldModifier="private" Margin="5,5,0,5" Width="66" Text="0" KeyDown="Limit_KeyDown" />
                     </StackPanel>
                     <StackPanel Orientation="Horizontal" Margin="300,45,0,0">
-                        <Button x:Name="limInfUp" x:FieldModifier="private" Margin="5,5,0,5" Content="˄" Width="30" Click="limitButton_Click" />
-                        <TextBox x:Name="limInfNum" x:FieldModifier="private" Margin="5,5,0,5" Width="66" Text="0" TextChanged="limitButton_Click" />
-                        <Button x:Name="limInfDown" x:FieldModifier="private" Margin="5,5,0,5"  Content="˅" Width="30" Click="limitButton_Click" />
+                        <TextBox x:Name="limInfNum" x:FieldModifier="private" Margin="5,5,0,5" Width="66" Text="0" KeyDown="Limit_KeyDown"/>
                     </StackPanel>
                 </RelativePanel>
             </CommandBar.Content>
             <AppBarSeparator/>
             <AppBarButton Icon="Document" Label="Imprimir"/>
-            <AppBarButton Icon="Refresh" Label="Reset" Click="Button1_Click"/>
-            
+            <AppBarButton x:Name="PlayButton" Icon="Play" Label="Iniciar" Click="PlayButton_Click" />
+            <AppBarButton Icon="Refresh" Label="Reset" Click="ResetButton_Click"/>
+
         </CommandBar>
 
     </Grid>
