@@ -7,7 +7,6 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:Charting="using:WinRTXamlToolkit.Controls.DataVisualization.Charting"
     mc:Ignorable="d">
-
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <Border BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Left" Height="88" Margin="250,57,0,0" VerticalAlignment="Top" Width="1254">
             <RelativePanel Margin="1,-1,-1,1">
@@ -17,14 +16,28 @@
         </Border>
         <Border BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Left" Height="920" Margin="1509,150,0,0" VerticalAlignment="Top" Width="398">
             <RelativePanel Margin="1,-1,-1,9">
-                <TextBlock HorizontalAlignment="Left" Height="62" Margin="111,10,-101,0" TextWrapping="Wrap" Text="Actual" Width="149" FontSize="50"/>
-                <TextBlock x:Name="labelActual" HorizontalAlignment="Center" Height="62" Margin="87,82,-30,-10" TextWrapping="Wrap" Text="-00.000" Width="203" FontSize="40" FontFamily="Lucida Console"/>
-                <TextBlock HorizontalAlignment="Left" Height="62" Margin="87,144,-77,0" TextWrapping="Wrap" Text="Promedio" Width="195" FontSize="40"/>
-                <TextBlock x:Name="labelPromedio" HorizontalAlignment="Left" Height="62" Margin="111,206,-141,0" TextWrapping="Wrap" Text="-00.000" Width="171" FontSize="35" FontFamily="Lucida Console"/>
+                <TextBlock HorizontalAlignment="Left" Height="62" Margin="111,10,-101,0" TextWrapping="Wrap" Text="Actual" Width="200" FontSize="50"/>
+                <TextBlock x:Name="labelActual" HorizontalAlignment="Center" Height="62" Margin="100,82,-30,-10" TextWrapping="Wrap" Text="-00.000" Width="250" FontSize="40" FontFamily="Lucida Console"/>
+                <TextBlock HorizontalAlignment="Left" Height="62" Margin="87,144,-77,0" TextWrapping="Wrap" Text="Promedio" Width="220" FontSize="50"/>
+                <TextBlock x:Name="labelPromedio" HorizontalAlignment="Left" Height="62" Margin="100,206,-141,0" TextWrapping="Wrap" Text="-00.000" Width="250" FontSize="40" FontFamily="Lucida Console"/>
+
                 <Border BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Center" Height="1" Margin="15,287,-384,-277" Width="371"/>
-                <TextBlock HorizontalAlignment="Left" Height="27" TextWrapping="Wrap" Text="SKU" VerticalAlignment="Top" Width="125" Margin="15,323,-140,-330" FontWeight="Bold" FontSize="20"/>
-                <TextBlock HorizontalAlignment="Left" Height="27" TextWrapping="Wrap" Text="Descripción" VerticalAlignment="Top" Width="125" Margin="15,355,-140,-362" FontWeight="Bold" FontSize="20"/>
-                <Button Content="..." HorizontalAlignment="Left" Height="32" VerticalAlignment="Top" Width="65" Margin="321,293,-321,-293"/>
+                
+                <TextBlock x:Name="labelOrderCustName" TextAlignment="Center" HorizontalAlignment="Left" Height="49" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="371" Margin="15,312,-246,-234" FontWeight="Black" FontStyle="Italic" FontSize="21"/>
+                <TextBlock HorizontalAlignment="Left" Height="27" TextWrapping="Wrap" Text="SKU" VerticalAlignment="Top" Width="125" Margin="15,361,0,-388" FontWeight="Bold" FontSize="20"/>
+                <TextBlock x:Name="labelOrderSku" HorizontalAlignment="Left" Height="27" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="169" Margin="15,394,-44,-294" FontWeight="Light" FontSize="19"/>
+                <TextBlock HorizontalAlignment="Left" Height="27" TextWrapping="Wrap" Text="Adhesivo" VerticalAlignment="Top" Width="125" Margin="189,361,-174,-388" FontWeight="Bold" FontSize="20"/>
+                <TextBlock x:Name="labelOrderAdhesivo" HorizontalAlignment="Left" Height="27" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="169" Margin="189,394,-218,-294" FontWeight="Light" FontSize="19"/>
+                <TextBlock HorizontalAlignment="Left" Height="27" TextWrapping="Wrap" Text="Turno" VerticalAlignment="Top" Width="125" Margin="15,446,0,-473" FontWeight="Bold" FontSize="20"/>
+                <TextBlock x:Name="labelOrderTurno" HorizontalAlignment="Left" Height="27" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="169" Margin="15,479,-44,-379" FontWeight="Light" FontSize="19"/>
+                <TextBlock HorizontalAlignment="Left" Height="27" TextWrapping="Wrap" Text="Operador" VerticalAlignment="Top" Width="125" Margin="189,446,-174,-473" FontWeight="Bold" FontSize="20"/>
+                <TextBlock x:Name="labelOrderOperador" HorizontalAlignment="Left" Height="27" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="169" Margin="189,485,-218,-385" FontWeight="Light" FontSize="19" />
+                <TextBlock HorizontalAlignment="Left" Height="27" TextWrapping="Wrap" Text="Longitud" VerticalAlignment="Top" Width="125" Margin="189,550,-174,-577" FontWeight="Bold" FontSize="20"/>
+                <TextBlock x:Name="labelOrderLongitud" HorizontalAlignment="Left" Height="27" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="169" Margin="189,582,-218,-482" FontWeight="Light" FontSize="19"/>
+                <TextBlock HorizontalAlignment="Left" Height="27" TextWrapping="Wrap" Text="Área" VerticalAlignment="Top" Width="125" Margin="15,550,0,-577" FontWeight="Bold" FontSize="20"/>
+                <TextBlock x:Name="labelOrderArea" HorizontalAlignment="Left" Height="27" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="169" Margin="10,582,-39,-482" FontWeight="Light" FontSize="19"/>
+                <TextBlock HorizontalAlignment="Left" Height="27" TextWrapping="Wrap" Text="Observaciones" VerticalAlignment="Top" Width="212" Margin="15,635,-87,-662" FontWeight="Bold" FontSize="20"/>
+                <TextBlock x:Name="labelOrderObservaciones" HorizontalAlignment="Left" Height="130" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="371" Margin="15,667,-246,-670" FontWeight="Light" FontSize="19" />
             </RelativePanel>
         </Border>
 
@@ -32,7 +45,6 @@
             <RelativePanel Margin="1,-1,-1,1">
                 <TextBlock HorizontalAlignment="Left" Height="20" TextWrapping="Wrap" Text="Opc Status:" VerticalAlignment="Top" Width="80" Margin="10,6,-18,-6" FontWeight="Bold"/>
                 <TextBlock x:Name="OpcStatus"  HorizontalAlignment="Left" Height="20" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="62" Margin="100,4,-72,-7"/>
-                <TextBlock HorizontalAlignment="Left" Height="20" TextWrapping="Wrap" Text="Error Count:" VerticalAlignment="Top" Width="95" Margin="10,29,-33,-29" FontWeight="Bold"/>
                 <TextBlock x:Name="ErrCount" HorizontalAlignment="Left" Height="20" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="62" Margin="100,29,-72,-29"/>
 
             </RelativePanel>
@@ -156,6 +168,31 @@
                     </StackPanel>
                 </RelativePanel>
             </CommandBar.Content>
+            <AppBarButton Icon="Edit" Label="Editar orden" AllowFocusOnInteraction="True">
+                <AppBarButton.Flyout>
+                    <Flyout x:Name="flyoutEdit"  >
+                        <RelativePanel Width="420" Height="500">
+                            <CommandBar OverflowButtonVisibility="Collapsed">
+                                <AppBarButton Icon="Save" Click="SaveOrderButton_Click" />
+                                <AppBarButton Icon="Upload" />
+                            </CommandBar>
+                            <TextBox x:Name="tbOrderSku" Margin="5,70,0,5" Width="130" Header="SKU" />
+                            <TextBox x:Name="tbOrderCliente" Margin="190,70,0,5" Width="200" Header="Cliente"/>
+                            <TextBox x:Name="tbOrderAdhesivo" Margin="5,140,0,5" Width="150" Header="Adhesivo"/>
+                            <ComboBox x:Name="tbOrderTurno" Margin="190,140,0,5" Width="100" Header="Turno">
+                                <ComboBoxItem Content="1o" />
+                                <ComboBoxItem Content="2o" />
+                                <ComboBoxItem Content="3o" />
+                                <ComboBoxItem Content="4o" />
+                            </ComboBox>
+                            <TextBox x:Name="tbOrderOperador" Margin="5,210,0,5" Width="150" Header="Operador"/>
+                            <TextBox x:Name="tbOrderLongitud" Margin="190,210,0,5" Width="200" Header="Longitud"/>
+                            <TextBox x:Name="tbOrderArea" Margin="5,280,0,5" Width="150" Header="Área"/>
+                            <TextBox x:Name="tbOrderObservaciones" Margin="5,350,0,5" Width="400" Height="100" Header="Observaciones" AcceptsReturn="True"/>
+                        </RelativePanel>
+                    </Flyout>
+                </AppBarButton.Flyout>
+            </AppBarButton>
             <AppBarSeparator/>
             <AppBarButton Icon="Document" Label="Imprimir"/>
             <AppBarButton x:Name="PlayButton" Icon="Play" Label="Iniciar" Click="PlayButton_Click" />

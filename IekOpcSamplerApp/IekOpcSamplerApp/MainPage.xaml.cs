@@ -71,29 +71,29 @@ namespace IekOpcSamplerApp
                     labelPromedio.Text = MainLineCollection.Average(x => x.Y).ToString("00.000");
                 }
 
-                if (Grid1.Children.Contains(line))
-                {
-                    Grid1.Children.Remove(line);
-                }
+                //if (Grid1.Children.Contains(line))
+                //{
+                //    Grid1.Children.Remove(line);
+                //}
 
-                var axisy = LineChart.ActualAxes[1] as LinearAxis;
-                var linearaximaximum = Convert.ToDouble(axisy.ActualMaximum);
-                var linearaximinimum = Convert.ToDouble(axisy.ActualMinimum);
-                double perinterval = Convert.ToDouble(axisy.ActualHeight / (linearaximaximum - linearaximinimum));
+                //var axisy = LineChart.ActualAxes[1] as LinearAxis;
+                //var linearaximaximum = Convert.ToDouble(axisy.ActualMaximum);
+                //var linearaximinimum = Convert.ToDouble(axisy.ActualMinimum);
+                //double perinterval = Convert.ToDouble(axisy.ActualHeight / (linearaximaximum - linearaximinimum));
 
-                var lineY = perinterval * (0.8 - linearaximinimum);
+                //var lineY = perinterval * (0.8 - linearaximinimum);
 
-                var ttv = MainLineSeries.TransformToVisual(Window.Current.Content);
-                Point screenCoords = ttv.TransformPoint(new Point(0, 0));
+                //var ttv = MainLineSeries.TransformToVisual(Window.Current.Content);
+                //Point screenCoords = ttv.TransformPoint(new Point(0, 0));
 
-                line = new Line();
-                line.X1 = screenCoords.X;
-                line.X2 = LineChart.ActualWidth;
-                line.Y1 = axisy.ActualHeight - lineY;
-                line.Y2 = axisy.ActualHeight - lineY;
-                line.Stroke = new SolidColorBrush(Colors.Gray);
-                line.StrokeThickness = 1;
-                Grid1.Children.Add(line);
+                //line = new Line();
+                //line.X1 = screenCoords.X;
+                //line.X2 = LineChart.ActualWidth;
+                //line.Y1 = axisy.ActualHeight - lineY;
+                //line.Y2 = axisy.ActualHeight - lineY;
+                //line.Stroke = new SolidColorBrush(Colors.Gray);
+                //line.StrokeThickness = 1;
+                //Grid1.Children.Add(line);
             };
 
             _OpcClient.ConnectionStatusChanged += _OpcClient_ConnectionStatusChanged;
@@ -118,7 +118,6 @@ namespace IekOpcSamplerApp
             OpcStatus.Text = "CONNECTING";
             try
             {
-                await FullTrustProcessLauncher.LaunchFullTrustProcessForCurrentAppAsync();
                 await _OpcClient.ConnectAsync();
                 await _OpcClient.SendAsync("HOLA");
             }
@@ -225,5 +224,19 @@ namespace IekOpcSamplerApp
                     MainLineCollection.Clear();
                 });
         }
+
+        private void SaveOrderButton_Click(object sender, RoutedEventArgs e)
+        {
+            flyoutEdit.Hide();
+            labelOrderSku.Text = tbOrderSku.Text;
+            labelOrderCustName.Text = tbOrderCliente.Text;
+            labelOrderArea.Text = tbOrderArea.Text;
+            labelOrderAdhesivo.Text = tbOrderAdhesivo.Text;
+            labelOrderLongitud.Text = tbOrderLongitud.Text;
+            labelOrderObservaciones.Text = tbOrderObservaciones.Text;
+            labelOrderOperador.Text = tbOrderOperador.Text;
+            labelOrderTurno.Text = ((ComboBoxItem)tbOrderTurno.SelectedItem)?.Content?.ToString() ?? "";
+        }
+
     }
 }

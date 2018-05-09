@@ -1,9 +1,6 @@
 ﻿using IekOpcSamplerApp.Models;
 using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Windows.Networking.Sockets;
 using Windows.Storage.Streams;
@@ -26,7 +23,7 @@ namespace IekOpcSamplerApp.Services
         public async Task ConnectAsync()
         {
             Uri webSocketUri;
-            Uri.TryCreate("ws://localhost:8888/opc", UriKind.Absolute, out webSocketUri);
+            Uri.TryCreate("ws://localhost:8889/opc", UriKind.Absolute, out webSocketUri);
             Uri server = webSocketUri;
             if (server == null)
             {
