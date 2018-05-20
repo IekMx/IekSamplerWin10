@@ -9,8 +9,8 @@
     mc:Ignorable="d">
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <Border BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Left" Height="88" Margin="250,57,0,0" VerticalAlignment="Top" Width="1254">
-            <RelativePanel Margin="1,-1,-1,1">
-                <TextBlock HorizontalAlignment="Left" Height="70" TextWrapping="Wrap" Text="Perfil del adhesivo" VerticalAlignment="Top" Width="457" Margin="366,10,-751,-60" FontWeight="Bold" FontSize="50"/>
+            <RelativePanel Margin="1,-1,-1,1" Background="LawnGreen">
+                <TextBlock HorizontalAlignment="Left" Height="70" TextWrapping="Wrap" Text="P e r f i l   d e l   A d h e s i v o" VerticalAlignment="Top" Width="778" Margin="197,10,-903,-60" FontWeight="Bold" FontSize="50" />
 
             </RelativePanel>
         </Border>
@@ -22,7 +22,7 @@
                 <TextBlock x:Name="labelPromedio" HorizontalAlignment="Left" Height="62" Margin="100,206,-141,0" TextWrapping="Wrap" Text="-00.000" Width="250" FontSize="40" FontFamily="Lucida Console"/>
 
                 <Border BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Center" Height="1" Margin="15,287,-384,-277" Width="371"/>
-                
+
                 <TextBlock x:Name="labelOrderCustName" TextAlignment="Center" HorizontalAlignment="Left" Height="49" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="371" Margin="15,312,-246,-234" FontWeight="Black" FontStyle="Italic" FontSize="21"/>
                 <TextBlock HorizontalAlignment="Left" Height="27" TextWrapping="Wrap" Text="SKU" VerticalAlignment="Top" Width="125" Margin="15,361,0,-388" FontWeight="Bold" FontSize="20"/>
                 <TextBlock x:Name="labelOrderSku" HorizontalAlignment="Left" Height="27" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="169" Margin="15,394,-44,-294" FontWeight="Light" FontSize="19"/>
@@ -44,9 +44,7 @@
         <Border BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Left" Height="88" Margin="1509,57,0,0" VerticalAlignment="Top" Width="398">
             <RelativePanel Margin="1,-1,-1,1">
                 <TextBlock HorizontalAlignment="Left" Height="20" TextWrapping="Wrap" Text="Opc Status:" VerticalAlignment="Top" Width="80" Margin="10,6,-18,-6" FontWeight="Bold"/>
-                <TextBlock x:Name="OpcStatus"  HorizontalAlignment="Left" Height="20" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="62" Margin="100,4,-72,-7"/>
-                <TextBlock x:Name="ErrCount" HorizontalAlignment="Left" Height="20" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="62" Margin="100,29,-72,-29"/>
-
+                <TextBlock x:Name="OpcStatus"  HorizontalAlignment="Left" Height="20" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="235" Margin="100,4,-245,-7"/>
             </RelativePanel>
         </Border>
         <Image HorizontalAlignment="Left" Height="92" VerticalAlignment="Top" Width="246" Source="Assets/ieklogo.png" Margin="0,53,0,0"/>
@@ -56,23 +54,16 @@
                     <Charting:LineSeries Title="" x:Name="MainLineSeries" ItemsSource="{Binding}" IndependentValueBinding="{Binding Path=X}" DependentValueBinding="{Binding Path=Y}" IsSelectionEnabled="True" Margin="0, 0, 0, 0">
                         <Charting:LineSeries.DataPointStyle>
                             <Style TargetType="Charting:LineDataPoint">
-                                <Setter Property="BorderThickness" Value="10" />
+                                <Setter Property="BorderThickness" Value="15" />
                                 <Setter Property="Background" Value="Black" />
                                 <Setter Property="IsTabStop" Value="False" />
-                                <Setter Property="Width" Value="10" />
-                                <Setter Property="Height" Value="0" />
-                                <Setter Property="Template">
-                                    <Setter.Value>
-                                        <ControlTemplate TargetType="Charting:LineDataPoint">
-                                            <Grid x:Name="Root" Opacity="0" />
-                                        </ControlTemplate>
-                                    </Setter.Value>
-                                </Setter>
+                                <Setter Property="Width" Value="20" />
+                                <Setter Property="Height" Value="20" />
                             </Style>
                         </Charting:LineSeries.DataPointStyle>
                         <Charting:LineSeries.PolylineStyle>
                             <Style TargetType="Polyline">
-                                <Setter Property="StrokeThickness" Value="5" />
+                                <Setter Property="StrokeThickness" Value="1" />
                             </Style>
                         </Charting:LineSeries.PolylineStyle>
                         <Charting:LineSeries.DependentRangeAxis>

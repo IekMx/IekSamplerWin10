@@ -45,6 +45,7 @@ namespace IekOpcSamplerApp.Services
             {
                 ConnectionStatusChanged?.Invoke(this, Enums.OpcSocketClientStatus.Bad);
                 log4net.LogManager.GetLogger(this.GetType()).Error(JsonConvert.SerializeObject(ex));
+                LogService.AddEntry(this.GetType().Name, ex);
                 IsConnected = false;
                 _socket.Dispose();
                 _socket = null;
@@ -58,7 +59,7 @@ namespace IekOpcSamplerApp.Services
             }
             catch (Exception e)
             {
-                throw;
+                LogService.AddEntry(this.GetType().Name, e);
             }
         }
 
@@ -71,7 +72,7 @@ namespace IekOpcSamplerApp.Services
             }
             catch (Exception ex)
             {
-                return;
+                LogService.AddEntry(this.GetType().Name, ex);
             }
         }
 
@@ -94,7 +95,7 @@ namespace IekOpcSamplerApp.Services
                 }
                 catch (Exception ex)
                 {
-                    throw;
+                    LogService.AddEntry(this.GetType().Name, ex);
                 }
             }
         }
@@ -116,6 +117,7 @@ namespace IekOpcSamplerApp.Services
                 }
                 catch (Exception ex)
                 {
+                    LogService.AddEntry(this.GetType().Name, ex);
                 }
                 _writer = null;
             }

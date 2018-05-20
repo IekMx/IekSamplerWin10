@@ -1,17 +1,13 @@
 ﻿using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
-using Windows.ApplicationModel;
-using Windows.Foundation;
-using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Shapes;
-using WinRTXamlToolkit.Controls.DataVisualization.Charting;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 
@@ -41,6 +37,7 @@ namespace IekOpcSamplerApp
         #region "Services"
         Services.OpcSocketServer _OpcClient = new Services.OpcSocketServer();
         Services.DatabaseService _DBClient = new Services.DatabaseService();
+        Services.OpcProcessor _OpcProcessor = new Services.OpcProcessor();
         #endregion
 
         public MainPage()
@@ -98,14 +95,14 @@ namespace IekOpcSamplerApp
 
             _OpcClient.ConnectionStatusChanged += _OpcClient_ConnectionStatusChanged;
             _OpcClient.TagValueChanged += _OpcClient_TagValueChanged;
-
+            _OpcProcessor.HomeCompleted += _OpcProcessor_HomeCompleted;
             StartServices();
 
             limSupNum.Text = LimSup.ToString();
             limInfNum.Text = LimInf.ToString();
             labelLimites.Text = "[" + LimSup + "," + LimInf + "]";
 
-            timer.Start();
+            //timer.Start();
 
         }
 
@@ -143,29 +140,81 @@ namespace IekOpcSamplerApp
             }
         }
 
-        private async void _OpcClient_TagValueChanged(object sender, Models.Tag tag)
+        private async void _OpcProcessor_HomeCompleted(List<KeyValuePair<int, double>> collection)
         {
             await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal,
                 () =>
                 {
-                    labelActual.Text = double.Parse(tag.Value).ToString("00.000");
-                    if (MainLineCollection.Count == 100)
+                    MainLineCollection.Clear();
+                    collection?.ForEach(x =>
                     {
-                        MainLineCollectionH.Add(MainLineCollection[0]);
-                        MainLineCollection.RemoveAt(0);
-                        UpperBoundCollection.RemoveAt(0);
-                        LowerBoundCollection.RemoveAt(0);
-                    }
-                    MainLineCollection.Add(new Models.Point(x, double.Parse(tag.Value)));
-                    UpperBoundCollection.Add(new Models.Point(x, LimSup));
-                    LowerBoundCollection.Add(new Models.Point(x, LimInf));
-                    x++;
-                    labelPromedio.Text = MainLineCollection.Average(x => x.Y).ToString("00.000");
+                        if (!MainLineCollection.Any(y => y.X == x.Key))
+                        {
+                            MainLineCollection.Add(new Models.Point(x.Key, x.Value));
+                            UpperBoundCollection.Add(new Models.Point(x.Key, LimSup));
+                            LowerBoundCollection.Add(new Models.Point(x.Key, LimInf));
+                        }
+                        else
+                        {
+                            var point = MainLineCollection.FirstOrDefault(y => y.X == x.Key);
+                            point.Y = x.Value;
+                        }
+                    });
                 });
+        }
+
+        private async void _OpcClient_TagValueChanged(object sender, Models.Tag tag)
+        {
+            var r = _OpcProcessor.ProcessTag(tag);
+            if (r != null)
+            {
+                await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal,
+                () =>
+                {
+                    var pos = MainLineCollection.FirstOrDefault(x => x.X == r.Handle);
+                    if (pos != null)
+                    {
+                        pos.Y = double.Parse(r.Value);
+                    }
+                    MainLineSeries.Refresh();
+                    labelActual.Text = r.Value;
+                });
+            }
+        }
+
+        private async void Button1_Click(object sender, RoutedEventArgs e)
+        {
+            await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal,
+                async () =>
+                {
+                    try
+                    {
+                        await _OpcClient.SendAsync(
+                            JsonConvert.SerializeObject(new
+                            {
+                                handle = 1,
+                                name = "B_BERTHA",
+                                value = 1
+                            }));
+                        await Task.Delay(500);
+                        await _OpcClient.SendAsync(
+                            JsonConvert.SerializeObject(new
+                            {
+                                handle = 1,
+                                name = "B_BERTHA",
+                                value = 0
+                            }));
+                    }
+                    catch (Exception ex)
+                    {
+                        throw;
+                    }
+                });
+
         }
         #endregion
 
-        private void Limit_KeyDown(object sender, KeyRoutedEventArgs e)
+        private async void Limit_KeyDown(object sender, KeyRoutedEventArgs e)
         {
             if (e.Key != Windows.System.VirtualKey.Enter)
             {
@@ -177,15 +226,23 @@ namespace IekOpcSamplerApp
             limSupNum.Text = LimSup.ToString();
             limInfNum.Text = LimInf.ToString();
 
-            for (var i = 0; i < UpperBoundCollection.Count; i++)
-            {
-                UpperBoundCollection[i] = new Models.Point(UpperBoundCollection[i].X, LimSup);
-            }
-            for (var i = 0; i < LowerBoundCollection.Count; i++)
-            {
-                LowerBoundCollection[i] = new Models.Point(LowerBoundCollection[i].X, LimInf);
-            }
             labelLimites.Text = "[" + LimSup + "," + LimInf + "]";
+
+            UpperBoundCollection.Clear();
+            LowerBoundCollection.Clear();
+
+            MainLineCollection.ToList().ForEach(x =>
+            {
+                UpperBoundCollection.Add(new Models.Point(x.X, LimSup));
+                LowerBoundCollection.Add(new Models.Point(x.X, LimInf));
+            });
+
+            await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal,
+                () =>
+                {
+                    UpperBoundSeries.Refresh();
+                    LowerBoundSeries.Refresh();
+                });
         }
 
         private void PlayButton_Click(object sender, RoutedEventArgs e)
@@ -196,32 +253,16 @@ namespace IekOpcSamplerApp
 
         private async void ResetButton_Click(object sender, RoutedEventArgs e)
         {
+
+            MainLineCollection.ToList().ForEach(x =>
+            {
+                x.Y = 0;
+            });
+
             await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal,
-                async () =>
+                () =>
                 {
-                    //try
-                    //{
-                    //    await _OpcClient.SendAsync(
-                    //        JsonConvert.SerializeObject(new
-                    //        {
-                    //            handle = 1,
-                    //            name = "B_BERTHA",
-                    //            value = 1
-                    //        }));
-                    //    await Task.Delay(500);
-                    //    await _OpcClient.SendAsync(
-                    //        JsonConvert.SerializeObject(new
-                    //        {
-                    //            handle = 1,
-                    //            name = "B_BERTHA",
-                    //            value = 0
-                    //        }));
-                    //}
-                    //catch (Exception ex)
-                    //{
-                    //    throw;
-                    //}
-                    MainLineCollection.Clear();
+                    MainLineSeries.Refresh();
                 });
         }
 
