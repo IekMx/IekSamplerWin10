@@ -8,6 +8,7 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Shapes;
+using WinRTXamlToolkit.Controls.DataVisualization.Charting;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 
@@ -93,9 +94,20 @@ namespace IekOpcSamplerApp
                 //Grid1.Children.Add(line);
             };
 
+            //MainLineSeries.IndependentAxis = new LinearAxis
+            //{
+            //    Margin = new Thickness(10, 0, 0, 10),
+            //    Orientation = AxisOrientation.X,
+            //    Interval = 50,
+            //    AxisLabelStyle = new 
+            //    ShowGridLines = false
+            //};
+
             _OpcClient.ConnectionStatusChanged += _OpcClient_ConnectionStatusChanged;
             _OpcClient.TagValueChanged += _OpcClient_TagValueChanged;
             _OpcProcessor.HomeCompleted += _OpcProcessor_HomeCompleted;
+            _OpcProcessor.LapCompleted += _OpcProcessor_LapCompleted;
+            _OpcProcessor.TagValidated += _OpcProcessor_TagValidated;
             StartServices();
 
             limSupNum.Text = LimSup.ToString();
@@ -124,6 +136,50 @@ namespace IekOpcSamplerApp
         }
 
         #region Events
+
+        private async void _OpcProcessor_TagValidated(Models.Tag tag)
+        {
+            if (tag != null)
+            {
+                await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal,
+                () =>
+                {
+                    var pos = MainLineCollection.FirstOrDefault(x => x.X == tag.Handle);
+                    if (pos != null)
+                    {
+                        pos.Y = double.Parse(tag.Value);
+                    }
+                    MainLineSeries.Refresh();
+                    labelActual.Text = double.Parse(tag.Value).ToString("000.00");
+                    labelPromedio.Text = MainLineCollection.Average(x => x.Y).ToString("000.00");
+                });
+            }
+        }
+
+        private async void _OpcProcessor_LapCompleted(bool fromHome)
+        {
+            await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal,
+                () =>
+                {
+                    if (fromHome)
+                    {
+                        MainLineCollection.ToList().Where(x => x.X < MainLineCollection.Max(y => y.X)).ToList().ForEach(x =>
+                        {
+                            MainLineCollectionH.Add(x);
+                            x.Y = MainLineCollection.ToList().Average(y => y.Y);
+                        });
+                    }
+                    else
+                    {
+                        MainLineCollection.ToList().Where(x => x.X > MainLineCollection.Min(y => y.X)).ToList().ForEach(x =>
+                        {
+                            MainLineCollectionH.Add(x);
+                            x.Y = MainLineCollection.ToList().Average(y => y.Y);
+                        });
+                    }
+                    MainLineSeries.Refresh();
+                });
+        }
 
         private void _OpcClient_ConnectionStatusChanged(object sender, Enums.OpcSocketClientStatus status)
         {
@@ -163,23 +219,9 @@ namespace IekOpcSamplerApp
                 });
         }
 
-        private async void _OpcClient_TagValueChanged(object sender, Models.Tag tag)
+        private void _OpcClient_TagValueChanged(object sender, Models.Tag tag)
         {
-            var r = _OpcProcessor.ProcessTag(tag);
-            if (r != null)
-            {
-                await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal,
-                () =>
-                {
-                    var pos = MainLineCollection.FirstOrDefault(x => x.X == r.Handle);
-                    if (pos != null)
-                    {
-                        pos.Y = double.Parse(r.Value);
-                    }
-                    MainLineSeries.Refresh();
-                    labelActual.Text = r.Value;
-                });
-            }
+            _OpcProcessor.ProcessTag(tag);
         }
 
         private async void Button1_Click(object sender, RoutedEventArgs e)
