@@ -1,6 +1,4 @@
-﻿using MySql.Data.MySqlClient;
-
-namespace IekOpcSamplerApp.Services
+﻿namespace IekOpcSamplerApp.Services
 {
     internal class DatabaseService
     {

@@ -2,17 +2,24 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Windows.Foundation;
+using Windows.Graphics.Printing;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
+using Windows.UI.Xaml.Media;
+using Windows.UI.Xaml.Media.Imaging;
+using Windows.UI.Xaml.Navigation;
 using Windows.UI.Xaml.Shapes;
+using WinRTXamlToolkit.Composition;
 using WinRTXamlToolkit.Controls.DataVisualization.Charting;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 
-namespace IekOpcSamplerApp
+namespace IekOpcSamplerApp.Pages
 {
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
@@ -24,6 +31,11 @@ namespace IekOpcSamplerApp
         double LastStep { get; set; }
         double LimSup = 5;
         double LimInf = -5;
+        int cycleCount = 0;
+        double _gaugeXlValue = 0;
+        int _retraso = 2000;
+
+        public static MainPage Current;
 
         ObservableCollection<Models.Point> MainLineCollection = new ObservableCollection<Models.Point>();
         ObservableCollection<Models.Point> UpperBoundCollection = new ObservableCollection<Models.Point>();
@@ -39,12 +51,15 @@ namespace IekOpcSamplerApp
         Services.OpcSocketServer _OpcClient = new Services.OpcSocketServer();
         Services.DatabaseService _DBClient = new Services.DatabaseService();
         Services.OpcProcessor _OpcProcessor = new Services.OpcProcessor();
+        Services.PrintHelper printHelper;
+
         #endregion
 
         public MainPage()
         {
             this.InitializeComponent();
             this.DataContext = this;
+            Current = this;
             MainLineSeries.DataContext = MainLineCollection;
             UpperBoundSeries.DataContext = UpperBoundCollection;
             LowerBoundSeries.DataContext = LowerBoundCollection;
@@ -72,7 +87,7 @@ namespace IekOpcSamplerApp
                 //if (Grid1.Children.Contains(line))
                 //{
                 //    Grid1.Children.Remove(line);
-                //}
+                ////}
 
                 //var axisy = LineChart.ActualAxes[1] as LinearAxis;
                 //var linearaximaximum = Convert.ToDouble(axisy.ActualMaximum);
@@ -82,14 +97,14 @@ namespace IekOpcSamplerApp
                 //var lineY = perinterval * (0.8 - linearaximinimum);
 
                 //var ttv = MainLineSeries.TransformToVisual(Window.Current.Content);
-                //Point screenCoords = ttv.TransformPoint(new Point(0, 0));
+                ////Point screenCoords = ttv.TransformPoint(new Point(0, 0));
 
                 //line = new Line();
                 //line.X1 = screenCoords.X;
                 //line.X2 = LineChart.ActualWidth;
                 //line.Y1 = axisy.ActualHeight - lineY;
                 //line.Y2 = axisy.ActualHeight - lineY;
-                //line.Stroke = new SolidColorBrush(Colors.Gray);
+                ////line.Stroke = new SolidColorBrush(Colors.Gray);
                 //line.StrokeThickness = 1;
                 //Grid1.Children.Add(line);
             };
@@ -105,16 +120,18 @@ namespace IekOpcSamplerApp
 
             _OpcClient.ConnectionStatusChanged += _OpcClient_ConnectionStatusChanged;
             _OpcClient.TagValueChanged += _OpcClient_TagValueChanged;
-            _OpcProcessor.HomeCompleted += _OpcProcessor_HomeCompleted;
+            _OpcProcessor.StepsUpdated += _OpcProcessor_HomeCompleted;
             _OpcProcessor.LapCompleted += _OpcProcessor_LapCompleted;
             _OpcProcessor.TagValidated += _OpcProcessor_TagValidated;
+            _OpcProcessor.CountChanged += _OpcProcessor_CountChanged;
+
             StartServices();
 
             limSupNum.Text = LimSup.ToString();
             limInfNum.Text = LimInf.ToString();
             labelLimites.Text = "[" + LimSup + "," + LimInf + "]";
 
-            //timer.Start();
+            timer.Start();
 
         }
 
@@ -135,7 +152,14 @@ namespace IekOpcSamplerApp
             }
         }
 
+
+
         #region Events
+
+        private void _OpcProcessor_CountChanged(double value)
+        {
+            _gaugeXlValue = value;
+        }
 
         private async void _OpcProcessor_TagValidated(Models.Tag tag)
         {
@@ -147,20 +171,23 @@ namespace IekOpcSamplerApp
                     var pos = MainLineCollection.FirstOrDefault(x => x.X == tag.Handle);
                     if (pos != null)
                     {
-                        pos.Y = double.Parse(tag.Value);
+                        System.Threading.Thread.Sleep(_retraso);
+                        pos.Y = _gaugeXlValue;
+                        MainLineSeries.Refresh();
+                        labelActual.Text = _gaugeXlValue.ToString("000.00");
+                        labelPromedio.Text = MainLineCollection.Average(x => x.Y).ToString("000.00");
                     }
-                    MainLineSeries.Refresh();
-                    labelActual.Text = double.Parse(tag.Value).ToString("000.00");
-                    labelPromedio.Text = MainLineCollection.Average(x => x.Y).ToString("000.00");
                 });
             }
         }
 
         private async void _OpcProcessor_LapCompleted(bool fromHome)
         {
+            cycleCount++;
             await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal,
                 () =>
                 {
+                    CycleCount.Text = cycleCount.ToString();
                     if (fromHome)
                     {
                         MainLineCollection.ToList().Where(x => x.X < MainLineCollection.Max(y => y.X)).ToList().ForEach(x =>
@@ -186,10 +213,10 @@ namespace IekOpcSamplerApp
             switch (status)
             {
                 case Enums.OpcSocketClientStatus.Good:
-                    OpcStatus.Text = "ONLINE";
+                    OpcStatus.Text = "En Línea";
                     break;
                 case Enums.OpcSocketClientStatus.Bad:
-                    OpcStatus.Text = "FAILED";
+                    OpcStatus.Text = "Error";
                     break;
                 default:
                     break;
@@ -201,7 +228,10 @@ namespace IekOpcSamplerApp
             await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal,
                 () =>
                 {
+                    labelMuestreo.Text = "[" + _OpcProcessor.Steps + "]";
                     MainLineCollection.Clear();
+                    UpperBoundCollection.Clear();
+                    LowerBoundCollection.Clear();
                     collection?.ForEach(x =>
                     {
                         if (!MainLineCollection.Any(y => y.X == x.Key))
@@ -223,6 +253,9 @@ namespace IekOpcSamplerApp
         {
             _OpcProcessor.ProcessTag(tag);
         }
+
+        #endregion
+
 
         private async void Button1_Click(object sender, RoutedEventArgs e)
         {
@@ -247,14 +280,44 @@ namespace IekOpcSamplerApp
                                 value = 0
                             }));
                     }
-                    catch (Exception ex)
+                    catch (Exception)
                     {
                         throw;
                     }
                 });
 
         }
-        #endregion
+
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            if (PrintManager.IsSupported())
+            {
+                // Tell the user how to print
+            }
+            else
+            {
+                // Remove the print button
+                PrintButton.Visibility = Visibility.Collapsed;
+
+                // Inform user that Printing is not supported
+
+                // Printing-related event handlers will never be called if printing
+                // is not supported, but it's okay to register for them anyway.
+            }
+
+            // Initalize common helper class and register for printing
+            printHelper = new Services.PrintHelper(this);
+            printHelper.RegisterForPrinting();
+
+        }
+
+        protected override void OnNavigatedFrom(NavigationEventArgs e)
+        {
+            if (printHelper != null)
+            {
+                printHelper.UnregisterForPrinting();
+            }
+        }
 
         private async void Limit_KeyDown(object sender, KeyRoutedEventArgs e)
         {
@@ -289,13 +352,29 @@ namespace IekOpcSamplerApp
 
         private void PlayButton_Click(object sender, RoutedEventArgs e)
         {
-            PlayButton.Icon = PlayButton.Label == "Iniciar" ? new SymbolIcon(Symbol.Pause) : new SymbolIcon(Symbol.Play);
-            PlayButton.Label = PlayButton.Label == "Iniciar" ? "Pausar" : "Iniciar";
+            switch (PlayButton.Label)
+            {
+                case "Iniciar":
+                    PlayButton.Icon = new SymbolIcon(Symbol.Pause);
+                    PlayButton.Label = "Pausar";
+                    _OpcProcessor.StepsUpdated -= _OpcProcessor_HomeCompleted;
+                    _OpcProcessor.LapCompleted -= _OpcProcessor_LapCompleted;
+                    _OpcProcessor.TagValidated -= _OpcProcessor_TagValidated;
+                    _OpcProcessor.CountChanged -= _OpcProcessor_CountChanged;
+                    break;
+                default:
+                    PlayButton.Icon = new SymbolIcon(Symbol.Play);
+                    PlayButton.Label = "Iniciar";
+                    _OpcProcessor.StepsUpdated += _OpcProcessor_HomeCompleted;
+                    _OpcProcessor.LapCompleted += _OpcProcessor_LapCompleted;
+                    _OpcProcessor.TagValidated += _OpcProcessor_TagValidated;
+                    _OpcProcessor.CountChanged += _OpcProcessor_CountChanged;
+                    break;
+            }
         }
 
         private async void ResetButton_Click(object sender, RoutedEventArgs e)
         {
-
             MainLineCollection.ToList().ForEach(x =>
             {
                 x.Y = 0;
@@ -321,5 +400,37 @@ namespace IekOpcSamplerApp
             labelOrderTurno.Text = ((ComboBoxItem)tbOrderTurno.SelectedItem)?.Content?.ToString() ?? "";
         }
 
+        private void RetrasoNum_KeyDown(object sender, KeyRoutedEventArgs e)
+        {
+            if (e.Key != Windows.System.VirtualKey.Enter)
+            {
+                return;
+            }
+            int.TryParse(retrasoNum.Text, out _retraso);
+            _retraso = _retraso == 0 ? 2000 : _retraso;
+        }
+
+        private async void ImprimirButton_Click(object sender, RoutedEventArgs e)
+        {
+            var bitmap = new RenderTargetBitmap();
+            await bitmap.RenderAsync(LineChart);
+            printHelper.PreparePrintContent(new PageToPrint
+            {
+                Orden = labelOrderAdhesivo.Text,
+                SKU = labelOrderSku.Text,
+                Adhesivo = labelOrderAdhesivo.Text,
+                Turno = labelOrderTurno.Text,
+                Operador = labelOrderOperador.Text,
+                Area = labelOrderArea.Text,
+                Longitud = labelOrderLongitud.Text,
+                Observaciones = labelOrderObservaciones.Text,
+                ChartImage = bitmap
+            });
+
+            await printHelper.ShowPrintUIAsync();
+
+            ResetButton_Click(sender, e);
+
+        }
     }
 }

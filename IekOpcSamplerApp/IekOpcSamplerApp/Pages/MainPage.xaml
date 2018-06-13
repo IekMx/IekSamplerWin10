@@ -2,7 +2,7 @@
     <wpfApplication12:NumericToAlphaConverter x:Key="xconverter"/>
 </Window.Resources>-->
 <Page
-    x:Class="IekOpcSamplerApp.MainPage"
+    x:Class="IekOpcSamplerApp.Pages.MainPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:IekOpcSamplerApp"
@@ -10,8 +10,9 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:Charting="using:WinRTXamlToolkit.Controls.DataVisualization.Charting"
     mc:Ignorable="d">
-        
+
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <Canvas x:Name="PrintCanvas" Opacity="0"/>
         <Border BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Left" Height="88" Margin="250,57,0,0" VerticalAlignment="Top" Width="1254">
             <RelativePanel Margin="1,-1,-1,1" Background="LawnGreen">
                 <TextBlock HorizontalAlignment="Left" Height="70" TextWrapping="Wrap" Text="P e r f i l   d e l   A d h e s i v o" VerticalAlignment="Top" Width="778" Margin="197,10,-903,-60" FontWeight="Bold" FontSize="50" />
@@ -47,8 +48,10 @@
 
         <Border BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Left" Height="88" Margin="1509,57,0,0" VerticalAlignment="Top" Width="398">
             <RelativePanel Margin="1,-1,-1,1">
-                <TextBlock HorizontalAlignment="Left" Height="20" TextWrapping="Wrap" Text="Opc Status:" VerticalAlignment="Top" Width="80" Margin="10,6,-18,-6" FontWeight="Bold"/>
+                <TextBlock HorizontalAlignment="Left" Height="20" TextWrapping="Wrap" Text="Opc:" VerticalAlignment="Top" Width="80" Margin="10,6,-18,-6" FontWeight="Bold"/>
                 <TextBlock x:Name="OpcStatus"  HorizontalAlignment="Left" Height="20" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="235" Margin="100,4,-245,-7"/>
+                <TextBlock HorizontalAlignment="Left" Height="20" TextWrapping="Wrap" Text="Ciclo:" VerticalAlignment="Top" Width="80" Margin="10,25,-18,-6" FontWeight="Bold"/>
+                <TextBlock x:Name="CycleCount"  HorizontalAlignment="Left" Height="20" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="235" Margin="100,23,-245,-7"/>
             </RelativePanel>
         </Border>
         <Image HorizontalAlignment="Left" Height="92" VerticalAlignment="Top" Width="246" Source="Assets/ieklogo.png" Margin="0,53,0,0"/>
@@ -167,14 +170,19 @@
             <CommandBar.Content>
                 <RelativePanel>
                     <TextBlock HorizontalAlignment="Left" Height="35" Margin="10,10,0,0" TextWrapping="Wrap" Text="Muestreo" VerticalAlignment="Top" Width="120" FontSize="25"/>
-                    <TextBlock x:Name="labelMuestreo" HorizontalAlignment="Left" Height="35" Margin="120,13,0,0" TextWrapping="Wrap" Text="[ ]" VerticalAlignment="Top" Width="120" FontSize="22"/>
+                    <TextBlock x:Name="labelMuestreo" HorizontalAlignment="Left" Height="35" Margin="120,13,0,0" TextWrapping="Wrap" Text="[]" VerticalAlignment="Top" Width="120" FontSize="22"/>
                     <TextBlock HorizontalAlignment="Left" Height="35" Margin="170,10,0,0" TextWrapping="Wrap" Text="Límites" VerticalAlignment="Top" Width="120" FontSize="25"/>
-                    <TextBlock x:Name="labelLimites" HorizontalAlignment="Left" Height="35" Margin="250,13,0,0" TextWrapping="Wrap" Text="[ ]" VerticalAlignment="Top" Width="120" FontSize="22"/>
+                    <TextBlock x:Name="labelLimites" HorizontalAlignment="Left" Height="35" Margin="250,13,0,0" TextWrapping="Wrap" Text="[]" VerticalAlignment="Top" Width="120" FontSize="22"/>
                     <StackPanel Orientation="Horizontal" Margin="155,45,0,0">
                         <TextBox x:Name="limSupNum" x:FieldModifier="private" Margin="5,5,0,5" Width="66" Text="0" KeyDown="Limit_KeyDown" />
                     </StackPanel>
                     <StackPanel Orientation="Horizontal" Margin="300,45,0,0">
                         <TextBox x:Name="limInfNum" x:FieldModifier="private" Margin="5,5,0,5" Width="66" Text="0" KeyDown="Limit_KeyDown"/>
+                    </StackPanel>
+                    <TextBlock HorizontalAlignment="Left" Height="35" Margin="300,10,0,0" TextWrapping="Wrap" Text="Retraso" VerticalAlignment="Top" Width="120" FontSize="25"/>
+                    <TextBlock x:Name="labelRetraso" HorizontalAlignment="Left" Height="35" Margin="390,13,0,0" TextWrapping="Wrap" Text="[]" VerticalAlignment="Top" Width="120" FontSize="22"/>
+                    <StackPanel Orientation="Horizontal" Margin="300,45,0,0">
+                        <TextBox x:Name="retrasoNum" x:FieldModifier="private" Margin="5,5,0,5" Width="66" Text="0" KeyDown="RetrasoNum_KeyDown" />
                     </StackPanel>
                 </RelativePanel>
             </CommandBar.Content>
@@ -186,7 +194,7 @@
                                 <AppBarButton Icon="Save" Click="SaveOrderButton_Click" />
                                 <AppBarButton Icon="Upload" />
                             </CommandBar>
-                            <TextBox x:Name="tbOrderSku" Margin="5,70,0,5" Width="130" Header="SKU" />
+                            <TextBox x:Name="tbOrderSku" Margin="5,70,0,5" Width="130" Header="SKU" />  
                             <TextBox x:Name="tbOrderCliente" Margin="190,70,0,5" Width="200" Header="Cliente"/>
                             <TextBox x:Name="tbOrderAdhesivo" Margin="5,140,0,5" Width="150" Header="Adhesivo"/>
                             <ComboBox x:Name="tbOrderTurno" Margin="190,140,0,5" Width="100" Header="Turno">
@@ -204,7 +212,7 @@
                 </AppBarButton.Flyout>
             </AppBarButton>
             <AppBarSeparator/>
-            <AppBarButton Icon="Document" Label="Imprimir"/>
+            <AppBarButton x:Name="PrintButton" Icon="Document" Label="Imprimir" Click="ImprimirButton_Click"/>
             <AppBarButton x:Name="PlayButton" Icon="Play" Label="Iniciar" Click="PlayButton_Click" />
             <AppBarButton Icon="Refresh" Label="Reset" Click="ResetButton_Click"/>
 
