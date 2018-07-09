@@ -170,14 +170,26 @@ namespace IekOpcSamplerApp.Services
                 // Print Task event handler is invoked when the print job is completed.
                 printTask.Completed += async (s, args) =>
                 {
-                    // Notify the user when the print operation fails.
-                    if (args.Completion == PrintTaskCompletion.Failed)
+                    string message = "";
+                    switch (args.Completion)
                     {
-                        await scenarioPage.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
-                        {
-                            StatusChanged?.Invoke("Error", 1);
-                        });
+                        case PrintTaskCompletion.Abandoned:
+                            break;
+                        case PrintTaskCompletion.Canceled:
+                            break;
+                        case PrintTaskCompletion.Failed:
+                            message = "Error";
+                            break;
+                        case PrintTaskCompletion.Submitted:
+                            message = "Submitted";
+                            break;
+                        default:
+                            break;
                     }
+                    await scenarioPage.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
+                    {
+                        StatusChanged?.Invoke(message, 1);
+                    });
                 };
 
                 sourceRequested.SetSource(printDocumentSource);
@@ -239,7 +251,7 @@ namespace IekOpcSamplerApp.Services
         protected virtual void GetPrintPreviewPage(object sender, GetPreviewPageEventArgs e)
         {
             PrintDocument printDoc = (PrintDocument)sender;
-            printDoc.SetPreviewPage(e.PageNumber, printPreviewPages[e.PageNumber - 1]);
+            printDoc.SetPreviewPage(e.PageNumber - 1, printPreviewPages[e.PageNumber - 1]);
         }
 
         /// <summary>

@@ -44,7 +44,7 @@ namespace IekOpcSamplerApp.Services
             catch (Exception ex)
             {
                 ConnectionStatusChanged?.Invoke(this, Enums.OpcSocketClientStatus.Bad);
-                log4net.LogManager.GetLogger(this.GetType()).Error(JsonConvert.SerializeObject(ex));
+                //log4net.LogManager.GetLogger(this.GetType()).Error(JsonConvert.SerializeObject(ex));
                 LogService.AddEntry(this.GetType().Name, ex);
                 IsConnected = false;
                 _socket.Dispose();

@@ -17,9 +17,9 @@ namespace IekOpcSamplerApp.Services
 
         public static void AddEntry(string where, Exception exception)
         {
-            _logContent.AppendLine(DateTime.Now.ToString("yyyy-MM-dd HH:mm ") + where);
-            _logContent.AppendLine(exception.Message);
-            _logContent.AppendLine(exception.StackTrace);
+            //_logContent.AppendLine(DateTime.Now.ToString("yyyy-MM-dd HH:mm ") + where);
+            //_logContent.AppendLine(exception.Message);
+            //_logContent.AppendLine(exception.StackTrace);
         }
 
     }

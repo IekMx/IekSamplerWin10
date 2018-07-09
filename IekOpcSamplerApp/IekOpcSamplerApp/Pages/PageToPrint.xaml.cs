@@ -10,113 +10,15 @@ namespace IekOpcSamplerApp.Pages
     /// </summary>
     public sealed partial class PageToPrint : Page
     {
-        public ImageSource ChartImage
-        {
-            get
-            {
-                return ScenarioImage.Source;
-            }
-            set
-            {
-                ScenarioImage.Source = value;
-            }
-        }
-
-        public string Orden
-        {
-            get
-            {
-                return OrdenTextBlock.Text;
-            }
-            set
-            {
-                OrdenTextBlock.Text = value;
-            }
-        }
-
-        public string SKU
-        {
-            get
-            {
-                return SkuTextBlock.Text;
-            }
-            set
-            {
-                SkuTextBlock.Text = value;
-            }
-        }
-
-        public string Adhesivo
-        {
-            get
-            {
-                return AdhesivoTextBlock.Text;
-            }
-            set
-            {
-                AdhesivoTextBlock.Text = value;
-            }
-        }
-
-        public string Turno
-        {
-            get
-            {
-                return TurnoTextBlock.Text;
-            }
-            set
-            {
-                TurnoTextBlock.Text = value;
-            }
-        }
-
-        public string Operador
-        {
-            get
-            {
-                return OperadorTextBlock.Text;
-            }
-            set
-            {
-                OperadorTextBlock.Text = value;
-            }
-        }
-
-        public string Area
-        {
-            get
-            {
-                return AreaTextBlock.Text;
-            }
-            set
-            {
-                AreaTextBlock.Text = value;
-            }
-        }
-
-        public string Longitud
-        {
-            get
-            {
-                return LongitudTextBlock.Text;
-            }
-            set
-            {
-                LongitudTextBlock.Text = value;
-            }
-        }
-
-        public string Observaciones
-        {
-            get
-            {
-                return ObservacionesTextBlock.Text;
-            }
-            set
-            {
-                ObservacionesTextBlock.Text = value;
-            }
-        }
+        public ImageSource ChartImage { get; set; }
+        public string Orden { get; set; }
+        public string SKU { get; set; }
+        public string Adhesivo { get; set; }
+        public string Turno { get; set; }
+        public string Operador { get; set; }
+        public string Area { get; set; }
+        public string Longitud { get; set; }
+        public string Observaciones { get; set; }
 
         public PageToPrint()
         {

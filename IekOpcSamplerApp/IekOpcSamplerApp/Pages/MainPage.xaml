@@ -14,14 +14,14 @@
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <Canvas x:Name="PrintCanvas" Opacity="0"/>
         <Border BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Left" Height="88" Margin="250,57,0,0" VerticalAlignment="Top" Width="1254">
-            <RelativePanel Margin="1,-1,-1,1" Background="LawnGreen">
+            <RelativePanel x:Name="WarningBanner" Margin="1,-1,-1,1" Background="LawnGreen">
                 <TextBlock HorizontalAlignment="Left" Height="70" TextWrapping="Wrap" Text="P e r f i l   d e l   A d h e s i v o" VerticalAlignment="Top" Width="778" Margin="197,10,-903,-60" FontWeight="Bold" FontSize="50" />
 
             </RelativePanel>
         </Border>
         <Border BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Left" Height="920" Margin="1509,150,0,0" VerticalAlignment="Top" Width="398">
             <RelativePanel Margin="1,-1,-1,9">
-                <TextBlock HorizontalAlignment="Left" Height="62" Margin="111,10,-101,0" TextWrapping="Wrap" Text="Actual" Width="200" FontSize="50"/>
+                <TextBlock x:Name="labelPaso" HorizontalAlignment="Left" Height="62" Margin="111,10,-101,0" TextWrapping="Wrap" Text="Paso ?" Width="200" FontSize="50" FontWeight="Bold"/>
                 <TextBlock x:Name="labelActual" HorizontalAlignment="Center" Height="62" Margin="100,82,-30,-10" TextWrapping="Wrap" Text="-00.000" Width="250" FontSize="40" FontFamily="Lucida Console"/>
                 <TextBlock HorizontalAlignment="Left" Height="62" Margin="87,144,-77,0" TextWrapping="Wrap" Text="Promedio" Width="220" FontSize="50"/>
                 <TextBlock x:Name="labelPromedio" HorizontalAlignment="Left" Height="62" Margin="100,206,-141,0" TextWrapping="Wrap" Text="-00.000" Width="250" FontSize="40" FontFamily="Lucida Console"/>
@@ -43,6 +43,7 @@
                 <TextBlock x:Name="labelOrderArea" HorizontalAlignment="Left" Height="27" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="169" Margin="10,582,-39,-482" FontWeight="Light" FontSize="19"/>
                 <TextBlock HorizontalAlignment="Left" Height="27" TextWrapping="Wrap" Text="Observaciones" VerticalAlignment="Top" Width="212" Margin="15,635,-87,-662" FontWeight="Bold" FontSize="20"/>
                 <TextBlock x:Name="labelOrderObservaciones" HorizontalAlignment="Left" Height="130" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="371" Margin="15,667,-246,-670" FontWeight="Light" FontSize="19" />
+                <Image x:Name="ChartPreview" Stretch="UniformToFill" Margin="15,667,-246,-670" Width="350" Height="220"/>
             </RelativePanel>
         </Border>
 
@@ -54,7 +55,7 @@
                 <TextBlock x:Name="CycleCount"  HorizontalAlignment="Left" Height="20" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="235" Margin="100,23,-245,-7"/>
             </RelativePanel>
         </Border>
-        <Image HorizontalAlignment="Left" Height="92" VerticalAlignment="Top" Width="246" Source="Assets/ieklogo.png" Margin="0,53,0,0"/>
+        <Image HorizontalAlignment="Left" Height="92" VerticalAlignment="Top" Width="246" Source="ms-appx:///Assets/ieklogo.png" Margin="0,53,0,0"/>
         <Border BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Left" Height="642" Margin="0,150,0,0" VerticalAlignment="Top" Width="1504">
             <Grid x:Name="Grid1" Margin="0,9,0,0">
                 <Charting:Chart x:Name="LineChart" HorizontalAlignment="Left" VerticalAlignment="Top" Width="1444" Height="650" Margin="34,-4,0,-15" >
@@ -170,19 +171,14 @@
             <CommandBar.Content>
                 <RelativePanel>
                     <TextBlock HorizontalAlignment="Left" Height="35" Margin="10,10,0,0" TextWrapping="Wrap" Text="Muestreo" VerticalAlignment="Top" Width="120" FontSize="25"/>
-                    <TextBlock x:Name="labelMuestreo" HorizontalAlignment="Left" Height="35" Margin="120,13,0,0" TextWrapping="Wrap" Text="[]" VerticalAlignment="Top" Width="120" FontSize="22"/>
+                    <TextBlock x:Name="labelMuestreo" HorizontalAlignment="Left" Height="35" Margin="130,13,0,0" TextWrapping="Wrap" Text="[]" VerticalAlignment="Top" Width="120" FontSize="22"/>
                     <TextBlock HorizontalAlignment="Left" Height="35" Margin="170,10,0,0" TextWrapping="Wrap" Text="Límites" VerticalAlignment="Top" Width="120" FontSize="25"/>
-                    <TextBlock x:Name="labelLimites" HorizontalAlignment="Left" Height="35" Margin="250,13,0,0" TextWrapping="Wrap" Text="[]" VerticalAlignment="Top" Width="120" FontSize="22"/>
+                    <TextBlock x:Name="labelLimites" HorizontalAlignment="Left" Height="35" Margin="260,13,0,0" TextWrapping="Wrap" Text="[]" VerticalAlignment="Top" Width="120" FontSize="22"/>
                     <StackPanel Orientation="Horizontal" Margin="155,45,0,0">
                         <TextBox x:Name="limSupNum" x:FieldModifier="private" Margin="5,5,0,5" Width="66" Text="0" KeyDown="Limit_KeyDown" />
                     </StackPanel>
-                    <StackPanel Orientation="Horizontal" Margin="300,45,0,0">
+                    <StackPanel Orientation="Horizontal" Margin="230,45,0,0">
                         <TextBox x:Name="limInfNum" x:FieldModifier="private" Margin="5,5,0,5" Width="66" Text="0" KeyDown="Limit_KeyDown"/>
-                    </StackPanel>
-                    <TextBlock HorizontalAlignment="Left" Height="35" Margin="300,10,0,0" TextWrapping="Wrap" Text="Retraso" VerticalAlignment="Top" Width="120" FontSize="25"/>
-                    <TextBlock x:Name="labelRetraso" HorizontalAlignment="Left" Height="35" Margin="390,13,0,0" TextWrapping="Wrap" Text="[]" VerticalAlignment="Top" Width="120" FontSize="22"/>
-                    <StackPanel Orientation="Horizontal" Margin="300,45,0,0">
-                        <TextBox x:Name="retrasoNum" x:FieldModifier="private" Margin="5,5,0,5" Width="66" Text="0" KeyDown="RetrasoNum_KeyDown" />
                     </StackPanel>
                 </RelativePanel>
             </CommandBar.Content>

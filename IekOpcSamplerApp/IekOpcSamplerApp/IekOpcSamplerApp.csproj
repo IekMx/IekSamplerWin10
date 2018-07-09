@@ -125,7 +125,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Assets\iek.targetsize-24_altform-unplated.png" />
+    <Content Include="Assets\chart.png" />
     <Content Include="Assets\ieklogo.png" />
+    <Content Include="Assets\ipv-logo.jpg" />
     <Content Include="Properties\Default.rd.xml" />
     <Content Include="Assets\LockScreenLogo.scale-200.png" />
     <Content Include="Assets\SplashScreen.scale-200.png" />

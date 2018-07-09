@@ -8,14 +8,15 @@ namespace IekOpcSamplerApp.Services
 {
     public delegate void UpdateCollectionDelegate(List<KeyValuePair<int, double>> collection);
     public delegate void LapCompletedDelegate(bool fromHome);
-    public delegate void TagValidatedDelegate(Models.Tag tag);
+    public delegate void TagUpdatedDelegate(Models.Tag tag);
     public delegate void CountChangedDelegate(double value);
 
     class OpcProcessor
     {
         public event UpdateCollectionDelegate StepsUpdated;
         public event LapCompletedDelegate LapCompleted;
-        public event TagValidatedDelegate TagValidated;
+        public event TagUpdatedDelegate TagValidated;
+        public event TagUpdatedDelegate DelayUpdated;
         public event CountChangedDelegate CountChanged;
 
         private Queue<Models.OpcMessage> _MessageQ = new Queue<Models.OpcMessage>();
@@ -100,6 +101,9 @@ namespace IekOpcSamplerApp.Services
                         int.TryParse(tag.Name.Replace("PLC1.Application.GVL.HMI_bShowAuto_", ""), out var auto);
                         UpdateSteps(auto == 1 ? 8 : auto == 2 ? 16 : 32);
                     }
+                    break;
+                case "PLC1.Application.GVL_1.HMI_rDelay":
+                    DelayUpdated?.Invoke(tag);
                     break;
                 default:
                     break;

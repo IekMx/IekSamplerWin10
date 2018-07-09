@@ -8,29 +8,29 @@
 
     <RelativePanel x:Name="PrintableArea" Width="1056" Height="816">
         <StackPanel x:Name="Header" Margin="100,50,802,0"/>
-        <TextBlock Foreground="Black" FontSize="25" TextAlignment="Left" FontFamily="Segoe UI" Margin="20,5,0,0" Width="100" Height="30" Text="Orden:" RenderTransformOrigin="0.566,-0.89"/>
-        <TextBlock x:Name="OrdenTextBlock" Foreground="Black" FontSize="20" TextAlignment="Left" FontFamily="Segoe UI" Margin="130,15,0,0" Width="300" Height="20" Text=""/>
-        <TextBlock Foreground="Black" FontSize="25" TextAlignment="Left" FontFamily="Segoe UI" Margin="20,35,0,0" Width="100" Height="30" Text="SKU:" RenderTransformOrigin="0.566,-0.89"/>
-        <TextBlock x:Name="SkuTextBlock" Foreground="Black" FontSize="20" TextAlignment="Left" FontFamily="Segoe UI" Margin="130,40,0,0" Width="300" Height="20" Text=""/>
-        <TextBlock Foreground="Black" FontSize="25" TextAlignment="Left" FontFamily="Segoe UI" Margin="20,65,0,0" Width="110" Height="30" Text="Adhesivo:" RenderTransformOrigin="0.566,-0.89"/>
-        <TextBlock x:Name="AdhesivoTextBlock" Foreground="Black" FontSize="20" TextAlignment="Left" FontFamily="Segoe UI" Margin="130,75,0,0" Width="300" Height="20" Text=""/>
-        <TextBlock Foreground="Black" FontSize="25" TextAlignment="Left" FontFamily="Segoe UI" Margin="20,95,0,0" Width="200" Height="70" Text="Turno:" RenderTransformOrigin="0.566,-0.89"/>
-        <TextBlock x:Name="TurnoTextBlock" Foreground="Black" FontSize="20" TextAlignment="Left" FontFamily="Segoe UI" Margin="130,105,0,0" Width="300" Height="20" Text=""/>
-        <TextBlock Foreground="Black" FontSize="25" TextAlignment="Left" FontFamily="Segoe UI" Margin="500,5,0,0" Width="230" Height="35" Text="Operador:" RenderTransformOrigin="0.566,-0.89"/>
-        <TextBlock x:Name="OperadorTextBlock" Foreground="Black" FontSize="20" TextAlignment="Left" FontFamily="Segoe UI" Margin="680,15,0,0" Width="300" Height="20" Text=""/>
-        <TextBlock Foreground="Black" FontSize="25" TextAlignment="Left" FontFamily="Segoe UI" Margin="500,35,0,0" Width="200" Height="30" Text="Área:" RenderTransformOrigin="0.566,-0.89"/>
-        <TextBlock x:Name="AreaTextBlock" Foreground="Black" FontSize="20" TextAlignment="Left" FontFamily="Segoe UI" Margin="680,40,0,0" Width="300" Height="20" Text=""/>
-        <TextBlock Foreground="Black" FontSize="25" TextAlignment="Left" FontFamily="Segoe UI" Margin="500,65,0,0" Width="210" Height="35" Text="Longitud:" RenderTransformOrigin="0.566,-0.89"/>
-        <TextBlock x:Name="LongitudTextBlock" Foreground="Black" FontSize="20" TextAlignment="Left" FontFamily="Segoe UI" Margin="680,75,0,0" Width="300" Height="20" Text=""/>
-        <TextBlock Foreground="Black" FontSize="25" TextAlignment="Left" FontFamily="Segoe UI" Margin="500,95,0,0" Width="350" Height="30" Text="Observaciones:" RenderTransformOrigin="0.566,-0.89"/>
-        <TextBlock x:Name="ObservacionesTextBlock" Foreground="Black" FontSize="20" TextAlignment="Left" FontFamily="Segoe UI" Margin="680,105,0,0" Width="350" Height="45" Text=""/>
+        <Image Source="ms-appx:///Assets/ipv-logo.jpg" Margin="5,5,0,0" Width="185" Height="150" Stretch="UniformToFill"/>
+        <TextBlock Foreground="Black" FontSize="25" TextAlignment="Left" FontFamily="Segoe UI" Margin="216,5,-230,0" Height="30" Text="Orden:" RenderTransformOrigin="0.566,-0.89"/>
+        <TextBlock x:Name="OrdenTextBlock" x:FieldModifier="public" Foreground="Black" FontSize="20" TextAlignment="Left" FontFamily="Segoe UI" Margin="350,12,-260,0" Height="25" Text="##########"/>
+        <TextBlock Foreground="Black" FontSize="25" TextAlignment="Left" FontFamily="Segoe UI" Margin="216,35,-230,0" Height="30" Text="SKU:" RenderTransformOrigin="0.566,-0.89"/>
+        <TextBlock x:Name="SkuTextBlock" x:FieldModifier="public" Foreground="Black" FontSize="20" TextAlignment="Left" FontFamily="Segoe UI" Margin="350,38,-260,0" Height="25" Text="##########"/>
+        <TextBlock Foreground="Black" FontSize="25" TextAlignment="Left" FontFamily="Segoe UI" Margin="216,65,-233,0" Height="30" Text="Adhesivo:" RenderTransformOrigin="0.566,-0.89"/>
+        <TextBlock x:Name="AdhesivoTextBlock" x:FieldModifier="public" Foreground="Black" FontSize="20" TextAlignment="Left" FontFamily="Segoe UI" Margin="350,73,-260,0" Height="25" Text="##########"/>
+        <TextBlock Foreground="Black" FontSize="25" TextAlignment="Left" FontFamily="Segoe UI" Margin="216,95,-263,0" Height="70" Text="Turno:" RenderTransformOrigin="0.566,-0.89"/>
+        <TextBlock x:Name="TurnoTextBlock" x:FieldModifier="public" Foreground="Black" FontSize="20" TextAlignment="Left" FontFamily="Segoe UI" Margin="350,103,-260,0" Height="25" Text="##########"/>
+        <TextBlock Foreground="Black" FontSize="25" TextAlignment="Left" FontFamily="Segoe UI" Margin="638,5,-215,0" Height="35" Text="Operador:" RenderTransformOrigin="0.566,-0.89"/>
+        <TextBlock x:Name="OperadorTextBlock" x:FieldModifier="public" Foreground="Black" FontSize="20" TextAlignment="Left" FontFamily="Segoe UI" Margin="800,12,-446,0" Height="25" Text="##########"/>
+        <TextBlock Foreground="Black" FontSize="25" TextAlignment="Left" FontFamily="Segoe UI" Margin="638,35,-205,0" Height="30" Text="Área:" RenderTransformOrigin="0.566,-0.89"/>
+        <TextBlock x:Name="AreaTextBlock" x:FieldModifier="public" Foreground="Black" FontSize="20" TextAlignment="Left" FontFamily="Segoe UI" Margin="800,38,-446,0" Height="25" Text="##########"/>
+        <TextBlock Foreground="Black" FontSize="25" TextAlignment="Left" FontFamily="Segoe UI" Margin="638,65,-209,0" Height="35" Text="Longitud:" RenderTransformOrigin="0.566,-0.89"/>
+        <TextBlock x:Name="LongitudTextBlock" x:FieldModifier="public" Foreground="Black" FontSize="20" TextAlignment="Left" FontFamily="Segoe UI" Margin="800,73,-446,0" Height="25" Text="##########"/>
+        <TextBlock Foreground="Black" FontSize="25" TextAlignment="Left" FontFamily="Segoe UI" Margin="638,95,-256,0" Height="30" Text="Observaciones:" RenderTransformOrigin="0.566,-0.89"/>
+        <TextBlock x:Name="ObservacionesTextBlock" x:FieldModifier="public" Foreground="Black" FontSize="20" TextAlignment="Left" FontFamily="Segoe UI" Margin="815,102,-462,0" Height="45" Text="##########"/>
         <RichTextBlockOverflow x:Name="ContinuationPageLinkedContainer" />
-        <Image x:Name="ScenarioImage" x:FieldModifier="public" Margin="25,150,0,0" Width="1000" Height="600"/>
-        <StackPanel x:Name="Footer" Margin="10,780,0,0" Width="100">
-            <TextBlock Foreground="Black" FontSize="16" TextAlignment="Left" FontFamily="Segoe UI">
+        <Image x:Name="ScenarioImage" Source="ms-appdata:///local/chart.png" x:FieldModifier="public" Margin="25,150,0,0" Width="1000" Height="600" />
+        <StackPanel x:Name="Footer" Margin="10,780,0,0" Width="100"/>
+        <TextBlock Foreground="Black" FontSize="16" TextAlignment="Left" FontFamily="Segoe UI" Margin="25,728,-66,-729">
                 <Run Text="IEK © 2018"/>
-            </TextBlock>
-        </StackPanel>
+        </TextBlock>
 
     </RelativePanel>
 </Page>

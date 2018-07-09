@@ -1,12 +1,18 @@
 ﻿using Newtonsoft.Json;
+using SharpDX.WIC;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
 using Windows.Foundation;
+using Windows.Graphics.Display;
+using Windows.Graphics.Imaging;
 using Windows.Graphics.Printing;
+using Windows.Storage;
+using Windows.Storage.Streams;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
@@ -29,11 +35,11 @@ namespace IekOpcSamplerApp.Pages
         #region "View"
         double ThisStep { get; set; }
         double LastStep { get; set; }
-        double LimSup = 5;
-        double LimInf = -5;
+        double LimSup = 19.5;
+        double LimInf = 17.5;
         int cycleCount = 0;
         double _gaugeXlValue = 0;
-        int _retraso = 2000;
+        int _Delay = 5000;
 
         public static MainPage Current;
 
@@ -42,16 +48,16 @@ namespace IekOpcSamplerApp.Pages
         ObservableCollection<Models.Point> LowerBoundCollection = new ObservableCollection<Models.Point>();
         ObservableCollection<Models.Point> MainLineCollectionH = new ObservableCollection<Models.Point>();
 
+        List<Array> CountingCollection = new List<Array>();
+
         DispatcherTimer timer = new DispatcherTimer();
         int x = 0;
-        Line line;
         #endregion
 
         #region "Services"
         Services.OpcSocketServer _OpcClient = new Services.OpcSocketServer();
         Services.DatabaseService _DBClient = new Services.DatabaseService();
         Services.OpcProcessor _OpcProcessor = new Services.OpcProcessor();
-        Services.PrintHelper printHelper;
 
         #endregion
 
@@ -124,6 +130,7 @@ namespace IekOpcSamplerApp.Pages
             _OpcProcessor.LapCompleted += _OpcProcessor_LapCompleted;
             _OpcProcessor.TagValidated += _OpcProcessor_TagValidated;
             _OpcProcessor.CountChanged += _OpcProcessor_CountChanged;
+            _OpcProcessor.DelayUpdated += _OpcProcessor_DelayUpdated;
 
             StartServices();
 
@@ -131,7 +138,7 @@ namespace IekOpcSamplerApp.Pages
             limInfNum.Text = LimInf.ToString();
             labelLimites.Text = "[" + LimSup + "," + LimInf + "]";
 
-            timer.Start();
+            //timer.Start();
 
         }
 
@@ -156,6 +163,12 @@ namespace IekOpcSamplerApp.Pages
 
         #region Events
 
+        private void _OpcProcessor_DelayUpdated(Models.Tag tag)
+        {
+            int.TryParse(tag.Value, out _Delay);
+            _Delay = _Delay == 0 ? 5000 : _Delay * 1000;
+        }
+
         private void _OpcProcessor_CountChanged(double value)
         {
             _gaugeXlValue = value;
@@ -171,11 +184,14 @@ namespace IekOpcSamplerApp.Pages
                     var pos = MainLineCollection.FirstOrDefault(x => x.X == tag.Handle);
                     if (pos != null)
                     {
-                        System.Threading.Thread.Sleep(_retraso);
+                        Task.Delay(_Delay).Wait();
                         pos.Y = _gaugeXlValue;
+                        double s = (double)CountingCollection.Last().GetValue(MainLineCollection.IndexOf(pos));
+                        CountingCollection.Last().SetValue(s + pos.Y, MainLineCollection.IndexOf(pos));
                         MainLineSeries.Refresh();
                         labelActual.Text = _gaugeXlValue.ToString("000.00");
                         labelPromedio.Text = MainLineCollection.Average(x => x.Y).ToString("000.00");
+                        labelPaso.Text = "Paso " + (MainLineCollection.IndexOf(pos) + 1);
                     }
                 });
             }
@@ -184,6 +200,8 @@ namespace IekOpcSamplerApp.Pages
         private async void _OpcProcessor_LapCompleted(bool fromHome)
         {
             cycleCount++;
+            CountingCollection.Add(Array.CreateInstance(typeof(double), _OpcProcessor.Steps));
+
             await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal,
                 () =>
                 {
@@ -229,6 +247,8 @@ namespace IekOpcSamplerApp.Pages
                 () =>
                 {
                     labelMuestreo.Text = "[" + _OpcProcessor.Steps + "]";
+                    CountingCollection.Clear();
+                    CountingCollection.Add(Array.CreateInstance(typeof(double), _OpcProcessor.Steps));
                     MainLineCollection.Clear();
                     UpperBoundCollection.Clear();
                     LowerBoundCollection.Clear();
@@ -306,17 +326,12 @@ namespace IekOpcSamplerApp.Pages
             }
 
             // Initalize common helper class and register for printing
-            printHelper = new Services.PrintHelper(this);
-            printHelper.RegisterForPrinting();
 
         }
 
         protected override void OnNavigatedFrom(NavigationEventArgs e)
         {
-            if (printHelper != null)
-            {
-                printHelper.UnregisterForPrinting();
-            }
+
         }
 
         private async void Limit_KeyDown(object sender, KeyRoutedEventArgs e)
@@ -400,37 +415,71 @@ namespace IekOpcSamplerApp.Pages
             labelOrderTurno.Text = ((ComboBoxItem)tbOrderTurno.SelectedItem)?.Content?.ToString() ?? "";
         }
 
-        private void RetrasoNum_KeyDown(object sender, KeyRoutedEventArgs e)
-        {
-            if (e.Key != Windows.System.VirtualKey.Enter)
-            {
-                return;
-            }
-            int.TryParse(retrasoNum.Text, out _retraso);
-            _retraso = _retraso == 0 ? 2000 : _retraso;
-        }
-
         private async void ImprimirButton_Click(object sender, RoutedEventArgs e)
         {
-            var bitmap = new RenderTargetBitmap();
-            await bitmap.RenderAsync(LineChart);
-            printHelper.PreparePrintContent(new PageToPrint
+            Array avgs = Array.CreateInstance(typeof(double), _OpcProcessor.Steps);
+            MainLineCollection.ToList().ForEach(x =>
             {
-                Orden = labelOrderAdhesivo.Text,
-                SKU = labelOrderSku.Text,
-                Adhesivo = labelOrderAdhesivo.Text,
-                Turno = labelOrderTurno.Text,
-                Operador = labelOrderOperador.Text,
-                Area = labelOrderArea.Text,
-                Longitud = labelOrderLongitud.Text,
-                Observaciones = labelOrderObservaciones.Text,
-                ChartImage = bitmap
+                CountingCollection.ForEach(y =>
+                {
+                    var idx = MainLineCollection.IndexOf(x);
+                    var s = (double)avgs.GetValue(idx);
+                    avgs.SetValue(s + (double)y.GetValue(idx), idx);
+                });
             });
+            LineChart.Width = LineChart.ActualWidth;
+            LineChart.Height = LineChart.ActualHeight;
+            var bitmap = new RenderTargetBitmap();
+            await bitmap.RenderAsync(LineChart, (int)LineChart.Width, (int)LineChart.Height);
+            var pixelBuffer = await bitmap.GetPixelsAsync();
+            var displayInformation = DisplayInformation.GetForCurrentView();
+            var guid = Guid.NewGuid();
+            var file = await ApplicationData.Current.LocalFolder.CreateFileAsync(guid + ".png", CreationCollisionOption.ReplaceExisting);
+            using (var stream = await file.OpenAsync(FileAccessMode.ReadWrite))
+            {
+                var encoder = await Windows.Graphics.Imaging.BitmapEncoder.CreateAsync(Windows.Graphics.Imaging.BitmapEncoder.PngEncoderId, stream);
 
+                encoder.SetPixelData(BitmapPixelFormat.Bgra8,
+                                     BitmapAlphaMode.Premultiplied,
+                                     (uint)LineChart.ActualWidth,
+                                     (uint)LineChart.ActualHeight,
+                                     displayInformation.RawDpiX,
+                                     displayInformation.RawDpiY,
+                                     pixelBuffer.ToArray());
+                await encoder.FlushAsync();
+            }
+            var page = new PageToPrint();
+            var bmp = new BitmapImage(new Uri("ms-appdata:///local/" + guid + ".png"));
+            page.ScenarioImage.Source = bmp;
+            page.OrdenTextBlock.Text = labelOrderCustName.Text;
+            page.SkuTextBlock.Text = labelOrderSku.Text;
+            page.OperadorTextBlock.Text = labelOrderOperador.Text;
+            page.TurnoTextBlock.Text = labelOrderTurno.Text;
+            page.LongitudTextBlock.Text = labelOrderLongitud.Text;
+            page.AdhesivoTextBlock.Text = labelOrderAdhesivo.Text;
+            page.AreaTextBlock.Text = labelOrderArea.Text;
+            page.ObservacionesTextBlock.Text = labelOrderObservaciones.Text;
+
+            var printHelper = new Services.PrintHelper(this);
+            printHelper.StatusChanged += async (string message, int type) =>
+            {
+                printHelper.UnregisterForPrinting();
+                printHelper = null;
+                page.ScenarioImage.Source = null;
+                try
+                {
+                    await file.DeleteAsync();
+                }
+                catch (Exception)
+                {
+                }
+                ResetButton_Click(sender, e);
+            };
+            printHelper.RegisterForPrinting();
+            printHelper.PreparePrintContent(page);
             await printHelper.ShowPrintUIAsync();
 
-            ResetButton_Click(sender, e);
-
         }
+
     }
 }
