@@ -21,7 +21,7 @@
         </Border>
         <Border BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Left" Height="920" Margin="1509,150,0,0" VerticalAlignment="Top" Width="398">
             <RelativePanel Margin="1,-1,-1,9">
-                <TextBlock x:Name="labelPaso" HorizontalAlignment="Left" Height="62" Margin="111,10,-101,0" TextWrapping="Wrap" Text="Paso ?" Width="200" FontSize="50" FontWeight="Bold"/>
+                <TextBlock x:Name="labelPaso" HorizontalAlignment="Left" Height="62" Margin="111,10,-101,0" TextWrapping="Wrap" Text="Pos. ?" Width="200" FontSize="50" FontWeight="Bold"/>
                 <TextBlock x:Name="labelActual" HorizontalAlignment="Center" Height="62" Margin="100,82,-30,-10" TextWrapping="Wrap" Text="-00.000" Width="250" FontSize="40" FontFamily="Lucida Console"/>
                 <TextBlock HorizontalAlignment="Left" Height="62" Margin="87,144,-77,0" TextWrapping="Wrap" Text="Promedio" Width="220" FontSize="50"/>
                 <TextBlock x:Name="labelPromedio" HorizontalAlignment="Left" Height="62" Margin="100,206,-141,0" TextWrapping="Wrap" Text="-00.000" Width="250" FontSize="40" FontFamily="Lucida Console"/>
@@ -147,11 +147,11 @@
                 <Charting:LineSeries Title="" ItemsSource="{Binding}" IndependentValueBinding="{Binding Path=X}" DependentValueBinding="{Binding Path=Y}" IsSelectionEnabled="True" Margin="0,-29,-22,-16">
                     <Charting:LineSeries.DataPointStyle>
                         <Style TargetType="Charting:LineDataPoint">
-                            <Setter Property="BorderThickness" Value="0" />
+                            <Setter Property="BorderThickness" Value="1" />
                             <Setter Property="Background" Value="DarkGray" />
                             <Setter Property="IsTabStop" Value="False" />
-                            <Setter Property="Width" Value="0" />
-                            <Setter Property="Height" Value="0" />
+                            <Setter Property="Width" Value="1" />
+                            <Setter Property="Height" Value="1" />
                             <Setter Property="Template">
                                 <Setter.Value>
                                     <ControlTemplate TargetType="Charting:LineDataPoint">

@@ -13,6 +13,7 @@ using Windows.Graphics.Imaging;
 using Windows.Graphics.Printing;
 using Windows.Storage;
 using Windows.Storage.Streams;
+using Windows.UI.Popups;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
@@ -48,7 +49,7 @@ namespace IekOpcSamplerApp.Pages
         ObservableCollection<Models.Point> LowerBoundCollection = new ObservableCollection<Models.Point>();
         ObservableCollection<Models.Point> MainLineCollectionH = new ObservableCollection<Models.Point>();
 
-        List<Array> CountingCollection = new List<Array>();
+        List<List<Models.Point>> CountingCollection = new List<List<Models.Point>>();
 
         DispatcherTimer timer = new DispatcherTimer();
         int x = 0;
@@ -178,52 +179,46 @@ namespace IekOpcSamplerApp.Pages
         {
             if (tag != null)
             {
-                await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal,
-                () =>
+
+                var pos = MainLineCollection.FirstOrDefault(x => x.X == tag.Handle);
+                if (pos != null)
                 {
-                    var pos = MainLineCollection.FirstOrDefault(x => x.X == tag.Handle);
-                    if (pos != null)
-                    {
-                        Task.Delay(_Delay).Wait();
-                        pos.Y = _gaugeXlValue;
-                        double s = (double)CountingCollection.Last().GetValue(MainLineCollection.IndexOf(pos));
-                        CountingCollection.Last().SetValue(s + pos.Y, MainLineCollection.IndexOf(pos));
-                        MainLineSeries.Refresh();
-                        labelActual.Text = _gaugeXlValue.ToString("000.00");
-                        labelPromedio.Text = MainLineCollection.Average(x => x.Y).ToString("000.00");
-                        labelPaso.Text = "Paso " + (MainLineCollection.IndexOf(pos) + 1);
-                    }
-                });
+                    await Task.Delay(_Delay).ContinueWith(async (h) =>
+                     {
+                         pos.Y = _gaugeXlValue;
+                         await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal,
+                         () =>
+                         {
+                             MainLineSeries.Refresh();
+                             labelActual.Text = _gaugeXlValue.ToString("00.00");
+                             labelPromedio.Text = MainLineCollection.Average(x => x.Y).ToString("00.00");
+                             labelPaso.Text = "Paso " + (MainLineCollection.IndexOf(pos) + 1);
+                         });
+                     });
+                }
             }
         }
 
         private async void _OpcProcessor_LapCompleted(bool fromHome)
         {
-            cycleCount++;
-            CountingCollection.Add(Array.CreateInstance(typeof(double), _OpcProcessor.Steps));
-
-            await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal,
+            await Task.Delay(_Delay + 100).ContinueWith(async (h) =>
+            {
+                cycleCount++;
+                CountingCollection.Add(MainLineCollection.ToList());
+                await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal,
                 () =>
                 {
                     CycleCount.Text = cycleCount.ToString();
-                    if (fromHome)
+                    int i = MainLineCollectionH.Count > 0 ? MainLineCollectionH.Max(x => x.X) : 0;
+                    MainLineCollection.ToList().ForEach(x =>
                     {
-                        MainLineCollection.ToList().Where(x => x.X < MainLineCollection.Max(y => y.X)).ToList().ForEach(x =>
-                        {
-                            MainLineCollectionH.Add(x);
-                            x.Y = MainLineCollection.ToList().Average(y => y.Y);
-                        });
-                    }
-                    else
-                    {
-                        MainLineCollection.ToList().Where(x => x.X > MainLineCollection.Min(y => y.X)).ToList().ForEach(x =>
-                        {
-                            MainLineCollectionH.Add(x);
-                            x.Y = MainLineCollection.ToList().Average(y => y.Y);
-                        });
-                    }
-                    MainLineSeries.Refresh();
+                        var p = new Models.Point(i++, x.Y);
+                        MainLineCollectionH.Add(p);
+                    });
+                    var p0 = new Models.Point(i++, 0);
+                    MainLineCollectionH.Add(p0);
                 });
+            });
         }
 
         private void _OpcClient_ConnectionStatusChanged(object sender, Enums.OpcSocketClientStatus status)
@@ -248,7 +243,6 @@ namespace IekOpcSamplerApp.Pages
                 {
                     labelMuestreo.Text = "[" + _OpcProcessor.Steps + "]";
                     CountingCollection.Clear();
-                    CountingCollection.Add(Array.CreateInstance(typeof(double), _OpcProcessor.Steps));
                     MainLineCollection.Clear();
                     UpperBoundCollection.Clear();
                     LowerBoundCollection.Clear();
@@ -394,7 +388,8 @@ namespace IekOpcSamplerApp.Pages
             {
                 x.Y = 0;
             });
-
+            MainLineCollectionH.Clear();
+            CountingCollection.Clear();
             await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal,
                 () =>
                 {
@@ -417,16 +412,38 @@ namespace IekOpcSamplerApp.Pages
 
         private async void ImprimirButton_Click(object sender, RoutedEventArgs e)
         {
-            Array avgs = Array.CreateInstance(typeof(double), _OpcProcessor.Steps);
-            MainLineCollection.ToList().ForEach(x =>
+            if (CountingCollection.Count <= 0)
             {
-                CountingCollection.ForEach(y =>
+                var dialog = new MessageDialog("No se ha completado al menos un ciclo");
+                await dialog.ShowAsync();
+                return;
+            }
+            List<Models.Point> avgs = new List<Models.Point>();
+            for (int i = 0; i < CountingCollection.First().Count; i++)
+            {
+                var p = new Models.Point(CountingCollection.First()[i].X, 0);
+                avgs.Add(p);
+            }
+            CountingCollection.ForEach(y =>
+            {
+                y.ForEach(x =>
                 {
-                    var idx = MainLineCollection.IndexOf(x);
-                    var s = (double)avgs.GetValue(idx);
-                    avgs.SetValue(s + (double)y.GetValue(idx), idx);
+                    avgs.First(z => z.X == x.X).Y += x.Y;
                 });
             });
+            avgs.ForEach(y =>
+            {
+                y.Y = y.Y / CountingCollection.Count;
+            });
+            avgs.ForEach(y =>
+            {
+                MainLineCollection.ToList().First(x => x.X == y.X).Y = y.Y;
+            });
+            await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal,
+                () =>
+                {
+                    MainLineSeries.Refresh();
+                });
             LineChart.Width = LineChart.ActualWidth;
             LineChart.Height = LineChart.ActualHeight;
             var bitmap = new RenderTargetBitmap();
