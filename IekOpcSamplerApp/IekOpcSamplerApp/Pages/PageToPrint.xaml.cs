@@ -10,16 +10,6 @@ namespace IekOpcSamplerApp.Pages
     /// </summary>
     public sealed partial class PageToPrint : Page
     {
-        public ImageSource ChartImage { get; set; }
-        public string Orden { get; set; }
-        public string SKU { get; set; }
-        public string Adhesivo { get; set; }
-        public string Turno { get; set; }
-        public string Operador { get; set; }
-        public string Area { get; set; }
-        public string Longitud { get; set; }
-        public string Observaciones { get; set; }
-
         public PageToPrint()
         {
             this.InitializeComponent();

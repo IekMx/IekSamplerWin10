@@ -14,35 +14,35 @@
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <Canvas x:Name="PrintCanvas" Opacity="0"/>
         <Border BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Left" Height="88" Margin="250,57,0,0" VerticalAlignment="Top" Width="1254">
-            <RelativePanel x:Name="WarningBanner" Margin="1,-1,-1,1" Background="LawnGreen">
+            <RelativePanel x:Name="WarningBanner" Margin="1,-1,-1,1">
                 <TextBlock HorizontalAlignment="Left" Height="70" TextWrapping="Wrap" Text="P e r f i l   d e l   A d h e s i v o" VerticalAlignment="Top" Width="778" Margin="197,10,-903,-60" FontWeight="Bold" FontSize="50" />
 
             </RelativePanel>
         </Border>
         <Border BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Left" Height="920" Margin="1509,150,0,0" VerticalAlignment="Top" Width="398">
             <RelativePanel Margin="1,-1,-1,9">
-                <TextBlock x:Name="labelPaso" HorizontalAlignment="Left" Height="62" Margin="111,10,-101,0" TextWrapping="Wrap" Text="Pos. ?" Width="200" FontSize="50" FontWeight="Bold"/>
-                <TextBlock x:Name="labelActual" HorizontalAlignment="Center" Height="62" Margin="100,82,-30,-10" TextWrapping="Wrap" Text="-00.000" Width="250" FontSize="40" FontFamily="Lucida Console"/>
+                <TextBlock x:Name="labelPaso" HorizontalAlignment="Left" Height="62" Margin="110,10,-101,0" TextWrapping="Wrap" Text="Pos. ?" Width="200" FontSize="50" FontWeight="Bold"/>
+                <TextBlock x:Name="labelActual" HorizontalAlignment="Center" Height="62" Margin="110,82,-30,-10" TextWrapping="Wrap" Text="-00.000" Width="250" FontSize="40" FontFamily="Lucida Console"/>
                 <TextBlock HorizontalAlignment="Left" Height="62" Margin="87,144,-77,0" TextWrapping="Wrap" Text="Promedio" Width="220" FontSize="50"/>
-                <TextBlock x:Name="labelPromedio" HorizontalAlignment="Left" Height="62" Margin="100,206,-141,0" TextWrapping="Wrap" Text="-00.000" Width="250" FontSize="40" FontFamily="Lucida Console"/>
+                <TextBlock x:Name="labelPromedio" HorizontalAlignment="Left" Height="62" Margin="110,206,-141,0" TextWrapping="Wrap" Text="-00.000" Width="250" FontSize="40" FontFamily="Lucida Console"/>
 
                 <Border BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Center" Height="1" Margin="15,287,-384,-277" Width="371"/>
 
-                <TextBlock x:Name="labelOrderCustName" TextAlignment="Center" HorizontalAlignment="Left" Height="49" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="371" Margin="15,312,-246,-234" FontWeight="Black" FontStyle="Italic" FontSize="21"/>
-                <TextBlock HorizontalAlignment="Left" Height="27" TextWrapping="Wrap" Text="SKU" VerticalAlignment="Top" Width="125" Margin="15,361,0,-388" FontWeight="Bold" FontSize="20"/>
-                <TextBlock x:Name="labelOrderSku" HorizontalAlignment="Left" Height="27" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="169" Margin="15,394,-44,-294" FontWeight="Light" FontSize="19"/>
+                <TextBlock x:Name="labelOrderCustName" TextAlignment="Center" HorizontalAlignment="Left" Height="49" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="371" Margin="15,312,-246,-234" FontWeight="Black" FontSize="21"/>
+                <TextBlock HorizontalAlignment="Left" Height="27" TextWrapping="Wrap" Text="SKU" VerticalAlignment="Top" Width="125" Margin="15,361,0,-388" FontWeight="Bold" FontSize="20" />
+                <TextBlock x:Name="labelOrderSku" HorizontalAlignment="Left" Height="27" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="169" Margin="15,394,-44,-294" FontWeight="Light" FontSize="19" FontFamily="Consolas"/>
                 <TextBlock HorizontalAlignment="Left" Height="27" TextWrapping="Wrap" Text="Adhesivo" VerticalAlignment="Top" Width="125" Margin="189,361,-174,-388" FontWeight="Bold" FontSize="20"/>
-                <TextBlock x:Name="labelOrderAdhesivo" HorizontalAlignment="Left" Height="27" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="169" Margin="189,394,-218,-294" FontWeight="Light" FontSize="19"/>
+                <TextBlock x:Name="labelOrderAdhesivo" HorizontalAlignment="Left" Height="27" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="169" Margin="189,394,-218,-294" FontWeight="Light" FontSize="19" FontFamily="Consolas"/>
                 <TextBlock HorizontalAlignment="Left" Height="27" TextWrapping="Wrap" Text="Turno" VerticalAlignment="Top" Width="125" Margin="15,446,0,-473" FontWeight="Bold" FontSize="20"/>
-                <TextBlock x:Name="labelOrderTurno" HorizontalAlignment="Left" Height="27" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="169" Margin="15,479,-44,-379" FontWeight="Light" FontSize="19"/>
+                <TextBlock x:Name="labelOrderTurno" HorizontalAlignment="Left" Height="27" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="169" Margin="15,479,-44,-379" FontWeight="Light" FontSize="19" FontFamily="Consolas"/>
                 <TextBlock HorizontalAlignment="Left" Height="27" TextWrapping="Wrap" Text="Operador" VerticalAlignment="Top" Width="125" Margin="189,446,-174,-473" FontWeight="Bold" FontSize="20"/>
-                <TextBlock x:Name="labelOrderOperador" HorizontalAlignment="Left" Height="27" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="169" Margin="189,485,-218,-385" FontWeight="Light" FontSize="19" />
+                <TextBlock x:Name="labelOrderOperador" HorizontalAlignment="Left" Height="27" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="169" Margin="189,485,-218,-385" FontWeight="Light" FontSize="19" FontFamily="Consolas"/>
                 <TextBlock HorizontalAlignment="Left" Height="27" TextWrapping="Wrap" Text="Longitud" VerticalAlignment="Top" Width="125" Margin="189,550,-174,-577" FontWeight="Bold" FontSize="20"/>
-                <TextBlock x:Name="labelOrderLongitud" HorizontalAlignment="Left" Height="27" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="169" Margin="189,582,-218,-482" FontWeight="Light" FontSize="19"/>
+                <TextBlock x:Name="labelOrderLongitud" HorizontalAlignment="Left" Height="27" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="169" Margin="189,582,-218,-482" FontWeight="Light" FontSize="19" FontFamily="Consolas"/>
                 <TextBlock HorizontalAlignment="Left" Height="27" TextWrapping="Wrap" Text="Área" VerticalAlignment="Top" Width="125" Margin="15,550,0,-577" FontWeight="Bold" FontSize="20"/>
-                <TextBlock x:Name="labelOrderArea" HorizontalAlignment="Left" Height="27" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="169" Margin="10,582,-39,-482" FontWeight="Light" FontSize="19"/>
+                <TextBlock x:Name="labelOrderArea" HorizontalAlignment="Left" Height="27" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="169" Margin="10,582,-39,-482" FontWeight="Light" FontSize="19" FontFamily="Consolas"/>
                 <TextBlock HorizontalAlignment="Left" Height="27" TextWrapping="Wrap" Text="Observaciones" VerticalAlignment="Top" Width="212" Margin="15,635,-87,-662" FontWeight="Bold" FontSize="20"/>
-                <TextBlock x:Name="labelOrderObservaciones" HorizontalAlignment="Left" Height="130" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="371" Margin="15,667,-246,-670" FontWeight="Light" FontSize="19" />
+                <TextBlock x:Name="labelOrderObservaciones" HorizontalAlignment="Left" Height="130" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="371" Margin="15,667,-246,-670" FontWeight="Light" FontSize="12" FontFamily="Consolas"/>
                 <Image x:Name="ChartPreview" Stretch="UniformToFill" Margin="15,667,-246,-670" Width="350" Height="220"/>
             </RelativePanel>
         </Border>
@@ -51,8 +51,8 @@
             <RelativePanel Margin="1,-1,-1,1">
                 <TextBlock HorizontalAlignment="Left" Height="20" TextWrapping="Wrap" Text="Opc:" VerticalAlignment="Top" Width="80" Margin="10,6,-18,-6" FontWeight="Bold"/>
                 <TextBlock x:Name="OpcStatus"  HorizontalAlignment="Left" Height="20" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="235" Margin="100,4,-245,-7"/>
-                <TextBlock HorizontalAlignment="Left" Height="20" TextWrapping="Wrap" Text="Ciclo:" VerticalAlignment="Top" Width="80" Margin="10,25,-18,-6" FontWeight="Bold"/>
-                <TextBlock x:Name="CycleCount"  HorizontalAlignment="Left" Height="20" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="235" Margin="100,23,-245,-7"/>
+                <TextBlock HorizontalAlignment="Left" Height="20" TextWrapping="Wrap" Text="Ciclo: " VerticalAlignment="Top" Width="80" Margin="10,25,-18,-6" FontWeight="Bold"/>
+                <TextBlock x:Name="CycleCount"  HorizontalAlignment="Left" Height="20" TextWrapping="Wrap" Text="-" VerticalAlignment="Top" Width="235" Margin="100,23,-245,-7"/>
             </RelativePanel>
         </Border>
         <Image HorizontalAlignment="Left" Height="92" VerticalAlignment="Top" Width="246" Source="ms-appx:///Assets/ieklogo.png" Margin="0,53,0,0"/>
@@ -171,14 +171,19 @@
             <CommandBar.Content>
                 <RelativePanel>
                     <TextBlock HorizontalAlignment="Left" Height="35" Margin="10,10,0,0" TextWrapping="Wrap" Text="Muestreo" VerticalAlignment="Top" Width="120" FontSize="25"/>
-                    <TextBlock x:Name="labelMuestreo" HorizontalAlignment="Left" Height="35" Margin="130,13,0,0" TextWrapping="Wrap" Text="[]" VerticalAlignment="Top" Width="120" FontSize="22"/>
+                    <TextBlock x:Name="labelMuestreo" HorizontalAlignment="Left" Height="35" Margin="120,13,0,0" TextWrapping="Wrap" Text="[]" VerticalAlignment="Top" Width="120" FontSize="22"/>
                     <TextBlock HorizontalAlignment="Left" Height="35" Margin="170,10,0,0" TextWrapping="Wrap" Text="Límites" VerticalAlignment="Top" Width="120" FontSize="25"/>
                     <TextBlock x:Name="labelLimites" HorizontalAlignment="Left" Height="35" Margin="260,13,0,0" TextWrapping="Wrap" Text="[]" VerticalAlignment="Top" Width="120" FontSize="22"/>
+                    <TextBlock HorizontalAlignment="Left" Height="35" Margin="360,10,0,0" TextWrapping="Wrap" Text="Margen de Error" VerticalAlignment="Top" Width="200" FontSize="25"/>
+                    <TextBlock x:Name="labelMargenError" HorizontalAlignment="Left" Height="35" Margin="550,13,0,0" TextWrapping="Wrap" Text="[20%]" VerticalAlignment="Top" Width="120" FontSize="22"/>
                     <StackPanel Orientation="Horizontal" Margin="155,45,0,0">
                         <TextBox x:Name="limSupNum" x:FieldModifier="private" Margin="5,5,0,5" Width="66" Text="0" KeyDown="Limit_KeyDown" />
                     </StackPanel>
                     <StackPanel Orientation="Horizontal" Margin="230,45,0,0">
                         <TextBox x:Name="limInfNum" x:FieldModifier="private" Margin="5,5,0,5" Width="66" Text="0" KeyDown="Limit_KeyDown"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Margin="370,45,0,0">
+                        <TextBox x:Name="margenErrNum" x:FieldModifier="private" Margin="5,5,0,5" Width="66" Text="0" KeyDown="margenErrNum_KeyDown"/>
                     </StackPanel>
                 </RelativePanel>
             </CommandBar.Content>
@@ -190,19 +195,19 @@
                                 <AppBarButton Icon="Save" Click="SaveOrderButton_Click" />
                                 <AppBarButton Icon="Upload" />
                             </CommandBar>
-                            <TextBox x:Name="tbOrderSku" Margin="5,70,0,5" Width="130" Header="SKU" />  
-                            <TextBox x:Name="tbOrderCliente" Margin="190,70,0,5" Width="200" Header="Cliente"/>
-                            <TextBox x:Name="tbOrderAdhesivo" Margin="5,140,0,5" Width="150" Header="Adhesivo"/>
-                            <ComboBox x:Name="tbOrderTurno" Margin="190,140,0,5" Width="100" Header="Turno">
+                            <TextBox x:Name="tbOrderSku" Margin="5,70,0,5" Width="130" Header="SKU" MaxLength="10" FontFamily="Consolas"/>
+                            <TextBox x:Name="tbOrderCliente" Margin="190,70,0,5" Width="200" Header="Cliente" MaxLength="30" FontFamily="Consolas"/>
+                            <TextBox x:Name="tbOrderAdhesivo" Margin="5,140,0,5" Width="150" Header="Adhesivo" MaxLength="10" FontFamily="Consolas"/>
+                            <ComboBox x:Name="tbOrderTurno" Margin="190,140,0,5" Width="100" Header="Turno" FontFamily="Consolas">
                                 <ComboBoxItem Content="1o" />
                                 <ComboBoxItem Content="2o" />
                                 <ComboBoxItem Content="3o" />
                                 <ComboBoxItem Content="4o" />
                             </ComboBox>
-                            <TextBox x:Name="tbOrderOperador" Margin="5,210,0,5" Width="150" Header="Operador"/>
-                            <TextBox x:Name="tbOrderLongitud" Margin="190,210,0,5" Width="200" Header="Longitud"/>
-                            <TextBox x:Name="tbOrderArea" Margin="5,280,0,5" Width="150" Header="Área"/>
-                            <TextBox x:Name="tbOrderObservaciones" Margin="5,350,0,5" Width="400" Height="100" Header="Observaciones" AcceptsReturn="True"/>
+                            <TextBox x:Name="tbOrderOperador" Margin="5,210,0,5" Width="150" Header="Operador" MaxLength="20" FontFamily="Consolas"/>
+                            <TextBox x:Name="tbOrderLongitud" Margin="190,210,0,5" Width="200" Header="Longitud" MaxLength="6" FontFamily="Consolas"/>
+                            <TextBox x:Name="tbOrderArea" Margin="5,280,0,5" Width="150" Header="Área" MaxLength="6" FontFamily="Consolas"/>
+                            <TextBox x:Name="tbOrderObservaciones" Margin="5,350,0,5" Width="400" Height="100" Header="Observaciones" AcceptsReturn="True" MaxLength="200" FontSize="12" FontFamily="Consolas"/>
                         </RelativePanel>
                     </Flyout>
                 </AppBarButton.Flyout>

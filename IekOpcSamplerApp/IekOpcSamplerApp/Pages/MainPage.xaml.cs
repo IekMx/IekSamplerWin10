@@ -38,6 +38,7 @@ namespace IekOpcSamplerApp.Pages
         double LastStep { get; set; }
         double LimSup = 19.5;
         double LimInf = 17.5;
+        double LimErr = 20;
         int cycleCount = 0;
         double _gaugeXlValue = 0;
         int _Delay = 5000;
@@ -181,6 +182,8 @@ namespace IekOpcSamplerApp.Pages
             {
 
                 var pos = MainLineCollection.FirstOrDefault(x => x.X == tag.Handle);
+                var errp = MainLineCollection.Count(x => x.Y > LimSup || x.Y < LimInf);
+
                 if (pos != null)
                 {
                     await Task.Delay(_Delay).ContinueWith(async (h) =>
@@ -191,8 +194,11 @@ namespace IekOpcSamplerApp.Pages
                          {
                              MainLineSeries.Refresh();
                              labelActual.Text = _gaugeXlValue.ToString("00.00");
-                             labelPromedio.Text = MainLineCollection.Average(x => x.Y).ToString("00.00");
-                             labelPaso.Text = "Paso " + (MainLineCollection.IndexOf(pos) + 1);
+                             bool error = errp > LimErr / 100 * MainLineCollection.Count;
+                             WarningBanner.Background = error ? new SolidColorBrush(Windows.UI.Color.FromArgb(255, 255, 0, 0)) : new SolidColorBrush(Windows.UI.Color.FromArgb(255, 255, 255, 255));
+                             var avg = MainLineCollection.Average(x => x.Y);
+                             labelPromedio.Text = avg.ToString("00.00");
+                             labelPaso.Text = "Pos. " + (MainLineCollection.IndexOf(pos) + 1);
                          });
                      });
                 }
@@ -201,10 +207,23 @@ namespace IekOpcSamplerApp.Pages
 
         private async void _OpcProcessor_LapCompleted(bool fromHome)
         {
+            cycleCount++;
+            await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal,
+            () =>
+            {
+                CycleCount.Text = cycleCount.ToString();
+            });
+
+            if (cycleCount == 1) return;
+
             await Task.Delay(_Delay + 100).ContinueWith(async (h) =>
             {
-                cycleCount++;
-                CountingCollection.Add(MainLineCollection.ToList());
+                var list = new List<Models.Point>();
+                MainLineCollection.ToList().ForEach(x =>
+                {
+                    list.Add(new Models.Point(x.X, x.Y));
+                });
+                CountingCollection.Add(list);
                 await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal,
                 () =>
                 {
@@ -359,6 +378,17 @@ namespace IekOpcSamplerApp.Pages
                 });
         }
 
+        private void margenErrNum_KeyDown(object sender, KeyRoutedEventArgs e)
+        {
+            if (e.Key != Windows.System.VirtualKey.Enter)
+            {
+                return;
+            }
+            double.TryParse(margenErrNum.Text, out LimErr);
+            labelMargenError.Text = "[" + LimErr + "%]";
+
+        }
+
         private void PlayButton_Click(object sender, RoutedEventArgs e)
         {
             switch (PlayButton.Label)
@@ -390,6 +420,8 @@ namespace IekOpcSamplerApp.Pages
             });
             MainLineCollectionH.Clear();
             CountingCollection.Clear();
+            cycleCount = 0;
+            CycleCount.Text = "-";
             await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal,
                 () =>
                 {
@@ -424,12 +456,17 @@ namespace IekOpcSamplerApp.Pages
                 var p = new Models.Point(CountingCollection.First()[i].X, 0);
                 avgs.Add(p);
             }
+
+            var csvString = new System.Text.StringBuilder();
             CountingCollection.ForEach(y =>
             {
+                var line = "";
                 y.ForEach(x =>
                 {
+                    line += x.Y + ",";
                     avgs.First(z => z.X == x.X).Y += x.Y;
                 });
+                csvString.AppendLine(line);
             });
             avgs.ForEach(y =>
             {
@@ -452,6 +489,7 @@ namespace IekOpcSamplerApp.Pages
             var displayInformation = DisplayInformation.GetForCurrentView();
             var guid = Guid.NewGuid();
             var file = await ApplicationData.Current.LocalFolder.CreateFileAsync(guid + ".png", CreationCollisionOption.ReplaceExisting);
+            var csvfile = await ApplicationData.Current.LocalFolder.CreateFileAsync(guid + ".csv", CreationCollisionOption.ReplaceExisting);
             using (var stream = await file.OpenAsync(FileAccessMode.ReadWrite))
             {
                 var encoder = await Windows.Graphics.Imaging.BitmapEncoder.CreateAsync(Windows.Graphics.Imaging.BitmapEncoder.PngEncoderId, stream);
@@ -465,17 +503,44 @@ namespace IekOpcSamplerApp.Pages
                                      pixelBuffer.ToArray());
                 await encoder.FlushAsync();
             }
+            using (var stream = await csvfile.OpenAsync(FileAccessMode.ReadWrite))
+            {
+                await stream.AsStreamForWrite().WriteAsync(System.Text.Encoding.ASCII.GetBytes(csvString.ToString()), 0, csvString.Length);
+            }
             var page = new PageToPrint();
             var bmp = new BitmapImage(new Uri("ms-appdata:///local/" + guid + ".png"));
             page.ScenarioImage.Source = bmp;
-            page.OrdenTextBlock.Text = labelOrderCustName.Text;
+            page.OrdenTextBlock.Text = labelOrderCustName.Text.ToUpper();
             page.SkuTextBlock.Text = labelOrderSku.Text;
-            page.OperadorTextBlock.Text = labelOrderOperador.Text;
+            page.OperadorTextBlock.Text = labelOrderOperador.Text.ToUpper();
             page.TurnoTextBlock.Text = labelOrderTurno.Text;
             page.LongitudTextBlock.Text = labelOrderLongitud.Text;
             page.AdhesivoTextBlock.Text = labelOrderAdhesivo.Text;
             page.AreaTextBlock.Text = labelOrderArea.Text;
-            page.ObservacionesTextBlock.Text = labelOrderObservaciones.Text;
+            var observaciones = new System.Text.StringBuilder();
+            var ix = 0;
+            if (!string.IsNullOrEmpty(labelOrderObservaciones.Text))
+            {
+                while (true)
+                {
+                    var line = "";
+                    try
+                    {
+                        line = labelOrderObservaciones.Text.Substring(ix, 60);
+                        ix += 60;
+                        observaciones.AppendLine(line);
+                    }
+                    catch (ArgumentOutOfRangeException)
+                    {
+                        line = labelOrderObservaciones.Text.Substring(ix);
+                        observaciones.AppendLine(line);
+                        break;
+                    }
+                }
+            }
+
+            page.ObservacionesTextBlock.Text = observaciones.ToString();
+            page.DensPromTextBlock.Text = avgs.Average(x => x.Y).ToString("#0.00");
 
             var printHelper = new Services.PrintHelper(this);
             printHelper.StatusChanged += async (string message, int type) =>
